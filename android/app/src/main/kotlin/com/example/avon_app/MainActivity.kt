@@ -1,4 +1,4 @@
-package com.example.avon_app
+package com.luisnu.avon_app
 
 import io.flutter.embedding.android.FlutterActivity
 
