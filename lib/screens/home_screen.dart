@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFfcbb04),
+      backgroundColor: Color(0xfff06292),
       // appBar: AppBar(
       //   title: Text('Natura App'),
       // ),
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFFfc6c0c),
+                primary: Color(0xFF7e04cc),
                 minimumSize: Size(100, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFFe4540c),
+                primary: Color(0xFFc41c9c),
                 minimumSize: Size(100, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
