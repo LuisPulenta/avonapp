@@ -317,12 +317,22 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     var body = response.body;
+    var decodedJson = jsonDecode(body);
+    var token = Token.fromJson(decodedJson);
+
+    if (token.user.modulo != Constants.Modulo) {
+      setState(() {
+        _emailShowError = true;
+        _emailError = 'Email o Contraseña no válidos';
+        _passwordShowError = true;
+        _passwordError = 'Email o Contraseña no válidos';
+      });
+      return;
+    }
+
     if (_rememberme) {
       _storeUser(body);
     }
-
-    var decodedJson = jsonDecode(body);
-    var token = Token.fromJson(decodedJson);
 
     Navigator.pushReplacement(
         context,

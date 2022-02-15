@@ -1,4 +1,5 @@
 class User {
+  String modulo = '';
   String firstName = '';
   String lastName = '';
   String document = '';
@@ -21,6 +22,7 @@ class User {
   String phoneNumber = '';
 
   User({
+    required this.modulo,
     required this.firstName,
     required this.lastName,
     required this.document,
@@ -44,6 +46,7 @@ class User {
   });
 
   User.fromJson(Map<String, dynamic> json) {
+    modulo = json['modulo'];
     firstName = json['firstName'];
     lastName = json['lastName'];
     document = json['document'];
@@ -68,6 +71,7 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['modulo'] = this.modulo;
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
     data['document'] = this.document;

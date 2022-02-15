@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:avon_app/helpers/constants.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:email_validator/email_validator.dart';
@@ -621,6 +622,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     }
 
     Map<String, dynamic> request = {
+      'modulo': Constants.Modulo,
       'firstName': _firstName,
       'lastName': _lastName,
       'document': _document,

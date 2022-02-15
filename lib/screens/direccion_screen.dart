@@ -266,6 +266,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
 
     Map<String, dynamic> request = {
       'id': widget.user.id,
+      'modulo': widget.user.modulo,
       'firstName': widget.user.firstName,
       'lastName': widget.user.lastName,
       'document': widget.user.document,

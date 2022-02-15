@@ -630,6 +630,7 @@ class _UserScreenState extends State<UserScreen> {
 
     Map<String, dynamic> request = {
       'id': widget.user.id,
+      'modulo': _user.modulo,
       'firstName': _firstName,
       'lastName': _lastName,
       'document': _document,

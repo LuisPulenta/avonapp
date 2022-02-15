@@ -4,6 +4,7 @@ class Token {
   String token = '';
   String expiration = '';
   User user = User(
+      modulo: '',
       firstName: '',
       lastName: '',
       document: '',
