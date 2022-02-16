@@ -284,39 +284,60 @@ class _DireccionScreenState extends State<DireccionScreen> {
       'phoneNumber': widget.user.phoneNumber,
     };
 
-    var connectivityResult = await Connectivity().checkConnectivity();
+    User userModified = widget.user;
+    userModified.address1 =
+        widget.option == 1 ? direccion : widget.user.address1;
+    userModified.latitude1 =
+        widget.option == 1 ? latitud : widget.user.latitude1;
+    userModified.longitude1 =
+        widget.option == 1 ? longitud : widget.user.longitude1;
+    userModified.address2 =
+        widget.option == 2 ? direccion : widget.user.address2;
+    userModified.latitude2 =
+        widget.option == 2 ? latitud : widget.user.latitude2;
+    userModified.longitude2 =
+        widget.option == 2 ? longitud : widget.user.longitude2;
+    userModified.address3 =
+        widget.option == 3 ? direccion : widget.user.address3;
+    userModified.latitude3 =
+        widget.option == 3 ? latitud : widget.user.latitude3;
+    userModified.longitude3 =
+        widget.option == 3 ? longitud : widget.user.longitude3;
 
-    if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estés conectado a Internet',
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
+    // var connectivityResult = await Connectivity().checkConnectivity();
 
-    Response response = await ApiHelper.put(
-        '/api/Users/', widget.user.id, request, widget.token);
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   setState(() {
+    //     _showLoader = false;
+    //   });
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message: 'Verifica que estés conectado a Internet',
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   return;
+    // }
 
-    setState(() {
-      _showLoader = false;
-    });
+    // Response response = await ApiHelper.put(
+    //     '/api/Users/', widget.user.id, request, widget.token);
 
-    if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-    Navigator.pop(context, 'yes');
+    // setState(() {
+    //   _showLoader = false;
+    // });
+
+    // if (!response.isSuccess) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message: response.message,
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   return;
+    // }
+    //Navigator.pop(context, 'yes');
+    Navigator.pop(context, userModified);
   }
 }
