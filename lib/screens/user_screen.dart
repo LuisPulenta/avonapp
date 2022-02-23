@@ -825,7 +825,7 @@ class _UserScreenState extends State<UserScreen> {
     await _getPosition();
 
     if (_habilitaPosicion) {
-      User userModified = await Navigator.push(
+      User? userModified = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => DireccionScreen(
@@ -834,27 +834,26 @@ class _UserScreenState extends State<UserScreen> {
                   option: _option,
                   positionUser: _positionUser,
                   direccionUser: _direccion)));
-      // if (result == 'yes') {
-      //   _getUser();
-      // }
 
-      setState(() {
-        _user.address1 = userModified.address1;
-        _user.address2 = userModified.address2;
-        _user.address3 = userModified.address3;
-        _user.latitude1 = userModified.latitude1;
-        _user.longitude1 = userModified.longitude1;
-        _user.latitude2 = userModified.latitude2;
-        _user.longitude2 = userModified.longitude2;
-        _user.latitude3 = userModified.latitude3;
-        _user.longitude3 = userModified.longitude3;
-        _address1 = _user.address1!;
-        _address2 = _user.address2!;
-        _address3 = _user.address3!;
-        _address1Controller.text = _address1;
-        _address2Controller.text = _address2;
-        _address3Controller.text = _address3;
-      });
+      if (userModified != null) {
+        setState(() {
+          _user.address1 = userModified!.address1;
+          _user.address2 = userModified!.address2;
+          _user.address3 = userModified!.address3;
+          _user.latitude1 = userModified!.latitude1;
+          _user.longitude1 = userModified!.longitude1;
+          _user.latitude2 = userModified!.latitude2;
+          _user.longitude2 = userModified!.longitude2;
+          _user.latitude3 = userModified!.latitude3;
+          _user.longitude3 = userModified!.longitude3;
+          _address1 = _user.address1!;
+          _address2 = _user.address2!;
+          _address3 = _user.address3!;
+          _address1Controller.text = _address1;
+          _address2Controller.text = _address2;
+          _address3Controller.text = _address3;
+        });
+      }
     }
   }
 

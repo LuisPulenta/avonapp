@@ -182,7 +182,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
                   SizedBox(
                     width: 20,
                   ),
-                  Text('Guardar'),
+                  Text('Seleccionar'),
                 ],
               ),
               style: ButtonStyle(
@@ -224,7 +224,9 @@ class _DireccionScreenState extends State<DireccionScreen> {
       icon: BitmapDescriptor.defaultMarker,
     ));
     var a = placemarks[0];
-    setState(() {});
+    setState(() {
+      _showSnackbar();
+    });
   }
 
   void _changeMapType() {
@@ -270,13 +272,16 @@ class _DireccionScreenState extends State<DireccionScreen> {
       'firstName': widget.user.firstName,
       'lastName': widget.user.lastName,
       'document': widget.user.document,
-      'address1': widget.option == 1 ? direccion : widget.user.address1,
+      'address1':
+          widget.option == 1 ? _direccionController.text : widget.user.address1,
       'latitude1': widget.option == 1 ? latitud : widget.user.latitude1,
       'longitude1': widget.option == 1 ? longitud : widget.user.longitude1,
-      'address2': widget.option == 2 ? direccion : widget.user.address2,
+      'address2':
+          widget.option == 2 ? _direccionController.text : widget.user.address2,
       'latitude2': widget.option == 2 ? latitud : widget.user.latitude2,
       'longitude2': widget.option == 2 ? longitud : widget.user.longitude2,
-      'address3': widget.option == 3 ? direccion : widget.user.address3,
+      'address3':
+          widget.option == 3 ? _direccionController.text : widget.user.address3,
       'latitude3': widget.option == 3 ? latitud : widget.user.latitude3,
       'longitude3': widget.option == 3 ? longitud : widget.user.longitude3,
       'email': widget.user.email,
@@ -286,19 +291,19 @@ class _DireccionScreenState extends State<DireccionScreen> {
 
     User userModified = widget.user;
     userModified.address1 =
-        widget.option == 1 ? direccion : widget.user.address1;
+        widget.option == 1 ? _direccionController.text : widget.user.address1;
     userModified.latitude1 =
         widget.option == 1 ? latitud : widget.user.latitude1;
     userModified.longitude1 =
         widget.option == 1 ? longitud : widget.user.longitude1;
     userModified.address2 =
-        widget.option == 2 ? direccion : widget.user.address2;
+        widget.option == 2 ? _direccionController.text : widget.user.address2;
     userModified.latitude2 =
         widget.option == 2 ? latitud : widget.user.latitude2;
     userModified.longitude2 =
         widget.option == 2 ? longitud : widget.user.longitude2;
     userModified.address3 =
-        widget.option == 3 ? direccion : widget.user.address3;
+        widget.option == 3 ? _direccionController.text : widget.user.address3;
     userModified.latitude3 =
         widget.option == 3 ? latitud : widget.user.latitude3;
     userModified.longitude3 =
@@ -339,5 +344,20 @@ class _DireccionScreenState extends State<DireccionScreen> {
     // }
     //Navigator.pop(context, 'yes');
     Navigator.pop(context, userModified);
+  }
+
+//*****************************************************************************
+//************************** METODO SHOWSNACKBAR ******************************
+//*****************************************************************************
+
+  void _showSnackbar() {
+    SnackBar snackbar = SnackBar(
+      content: Text(
+          "Verifique que la dirección sea correcta. Sino puede editarla antes de seleccionarla."),
+      backgroundColor: Color(0xFFe4540c),
+      duration: Duration(seconds: 5),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    //ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }

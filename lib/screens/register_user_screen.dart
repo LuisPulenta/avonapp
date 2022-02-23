@@ -623,8 +623,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
     Map<String, dynamic> request = {
       'modulo': Constants.Modulo,
-      'firstName': _firstName,
-      'lastName': _lastName,
+      'firstName': PLMayusc(_firstName),
+      'lastName': PLMayusc(_lastName),
       'document': _document,
       'address1': _address1,
       'address2': _address2,
@@ -657,11 +657,35 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
         context: context,
         title: 'Confirmación',
         message:
-            'Se ha enviado un correo con las instrucciones para activar el usuario. Por favor actívelo para poder ingresar a la Aplicación.',
+            'Se ha enviado un correo con las instrucciones para activar el usuario. Por favor actívelo para poder ingresar a la Aplicación. Luego ingrese a la Aplicación e ingrese al menos una Dirección para completar el Proceso de Registro.',
         actions: <AlertDialogAction>[
           AlertDialogAction(key: null, label: 'Aceptar'),
         ]);
 
     Navigator.pop(context, 'yes');
+  }
+
+  String PLMayusc(String string) {
+    String name = '';
+    bool isSpace = false;
+    String letter = '';
+    for (int i = 0; i < string.length; i++) {
+      if (isSpace || i == 0) {
+        letter = string[i].toUpperCase();
+        isSpace = false;
+      } else {
+        letter = string[i].toLowerCase();
+        isSpace = false;
+      }
+
+      if (string[i] == " ") {
+        isSpace = true;
+      } else {
+        isSpace = false;
+      }
+
+      name = name + letter;
+    }
+    return name;
   }
 }
