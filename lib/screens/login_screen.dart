@@ -62,6 +62,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 200,
               )),
           Transform.translate(
+            offset: Offset(0, 160),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  Constants.version,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.pink,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Transform.translate(
             offset: Offset(0, -60),
             child: Center(
               child: SingleChildScrollView(
