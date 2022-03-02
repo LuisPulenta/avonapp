@@ -54,17 +54,17 @@ class _UserScreenState extends State<UserScreen> {
   bool _documentShowError = false;
   TextEditingController _documentController = TextEditingController();
 
-  String _address1 = '';
+  String? _address1 = '';
   String _address1Error = '';
   bool _address1ShowError = false;
   TextEditingController _address1Controller = TextEditingController();
 
-  String _address2 = '';
+  String? _address2 = '';
   String _address2Error = '';
   bool _address2ShowError = false;
   TextEditingController _address2Controller = TextEditingController();
 
-  String _address3 = '';
+  String? _address3 = '';
   String _address3Error = '';
   bool _address3ShowError = false;
   TextEditingController _address3Controller = TextEditingController();
@@ -647,6 +647,27 @@ class _UserScreenState extends State<UserScreen> {
       'userName': _email,
       'phoneNumber': _phoneNumber,
       'image': base64image,
+      'street1': _user.street1,
+      'administrativeArea1': _user.administrativeArea1,
+      'country1': _user.country1,
+      'isoCountryCode1': _user.isoCountryCode1,
+      'locality1': _user.locality1,
+      'subAdministrativeArea1': _user.subAdministrativeArea1,
+      'subLocality1': _user.subLocality1,
+      'street2': _user.street2,
+      'administrativeArea2': _user.administrativeArea2,
+      'country2': _user.country2,
+      'isoCountryCode2': _user.isoCountryCode2,
+      'locality2': _user.locality2,
+      'subAdministrativeArea2': _user.subAdministrativeArea2,
+      'subLocality2': _user.subLocality2,
+      'street3': _user.street3,
+      'administrativeArea3': _user.administrativeArea3,
+      'country3': _user.country3,
+      'isoCountryCode3': _user.isoCountryCode3,
+      'locality3': _user.locality3,
+      'subAdministrativeArea3': _user.subAdministrativeArea3,
+      'subLocality3': _user.subLocality3,
     };
 
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -801,9 +822,9 @@ class _UserScreenState extends State<UserScreen> {
     _address1 = _user.address1!;
     _address2 = _user.address2!;
     _address3 = _user.address3!;
-    _address1Controller.text = _address1;
-    _address2Controller.text = _address2;
-    _address3Controller.text = _address3;
+    _address1Controller.text = _address1.toString();
+    _address2Controller.text = _address2.toString();
+    _address3Controller.text = _address3.toString();
 
     _email = _user.email;
     _emailController.text = _email;
@@ -837,21 +858,42 @@ class _UserScreenState extends State<UserScreen> {
 
       if (userModified != null) {
         setState(() {
-          _user.address1 = userModified!.address1;
-          _user.address2 = userModified!.address2;
-          _user.address3 = userModified!.address3;
-          _user.latitude1 = userModified!.latitude1;
-          _user.longitude1 = userModified!.longitude1;
-          _user.latitude2 = userModified!.latitude2;
-          _user.longitude2 = userModified!.longitude2;
-          _user.latitude3 = userModified!.latitude3;
-          _user.longitude3 = userModified!.longitude3;
+          _user.address1 = userModified.address1;
+          _user.address2 = userModified.address2;
+          _user.address3 = userModified.address3;
+          _user.latitude1 = userModified.latitude1;
+          _user.longitude1 = userModified.longitude1;
+          _user.latitude2 = userModified.latitude2;
+          _user.longitude2 = userModified.longitude2;
+          _user.latitude3 = userModified.latitude3;
+          _user.longitude3 = userModified.longitude3;
+          _user.street1 = userModified.street1;
+          _user.street2 = userModified.street2;
+          _user.street3 = userModified.street3;
+          _user.country1 = userModified.country1;
+          _user.country2 = userModified.country2;
+          _user.country3 = userModified.country3;
+          _user.isoCountryCode1 = userModified.isoCountryCode1;
+          _user.isoCountryCode2 = userModified.isoCountryCode2;
+          _user.isoCountryCode3 = userModified.isoCountryCode3;
+          _user.administrativeArea1 = userModified.administrativeArea1;
+          _user.administrativeArea2 = userModified.administrativeArea2;
+          _user.administrativeArea3 = userModified.administrativeArea3;
+          _user.locality1 = userModified.locality1;
+          _user.locality2 = userModified.locality2;
+          _user.locality3 = userModified.locality3;
+          _user.subAdministrativeArea1 = userModified.subAdministrativeArea1;
+          _user.subAdministrativeArea2 = userModified.subAdministrativeArea2;
+          _user.subAdministrativeArea3 = userModified.subAdministrativeArea3;
+          _user.subLocality1 = userModified.subLocality1;
+          _user.subLocality2 = userModified.subLocality2;
+          _user.subLocality3 = userModified.subLocality3;
           _address1 = _user.address1!;
           _address2 = _user.address2!;
           _address3 = _user.address3!;
-          _address1Controller.text = _address1;
-          _address2Controller.text = _address2;
-          _address3Controller.text = _address3;
+          _address1Controller.text = _address1!;
+          _address2Controller.text = _address2!;
+          _address3Controller.text = _address3!;
         });
       }
     }

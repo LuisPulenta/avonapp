@@ -31,6 +31,7 @@ class DireccionScreen extends StatefulWidget {
 
 class _DireccionScreenState extends State<DireccionScreen> {
   String _direccion = '';
+
   String _direccionError = '';
   bool _direccionShowError = false;
   TextEditingController _direccionController = TextEditingController();
@@ -41,6 +42,13 @@ class _DireccionScreenState extends State<DireccionScreen> {
   final Set<Marker> _markers = {};
   MapType _defaultMapType = MapType.normal;
   String direccion = '';
+  String street = '';
+  String administrativeArea = '';
+  String country = '';
+  String isoCountryCode = '';
+  String locality = '';
+  String subAdministrativeArea = '';
+  String subLocality = '';
   Position position = Position(
       longitude: 0,
       latitude: 0,
@@ -211,6 +219,15 @@ class _DireccionScreenState extends State<DireccionScreen> {
     direccion = placemarks[0].street.toString() +
         " - " +
         placemarks[0].locality.toString();
+
+    street = placemarks[0].street.toString();
+    administrativeArea = placemarks[0].administrativeArea.toString();
+    country = placemarks[0].country.toString();
+    isoCountryCode = placemarks[0].isoCountryCode.toString();
+    locality = placemarks[0].locality.toString();
+    subAdministrativeArea = placemarks[0].subAdministrativeArea.toString();
+    subLocality = placemarks[0].subLocality.toString();
+
     _direccionController.text = direccion;
     _markers.clear();
     _markers.add(Marker(
@@ -296,18 +313,65 @@ class _DireccionScreenState extends State<DireccionScreen> {
         widget.option == 1 ? latitud : widget.user.latitude1;
     userModified.longitude1 =
         widget.option == 1 ? longitud : widget.user.longitude1;
-    userModified.address2 =
+
+    userModified.street1 = widget.option == 1 ? street : widget.user.street1;
+    userModified.administrativeArea1 = widget.option == 1
+        ? administrativeArea
+        : widget.user.administrativeArea1;
+    userModified.country1 = widget.option == 1 ? country : widget.user.country1;
+    userModified.isoCountryCode1 =
+        widget.option == 1 ? isoCountryCode : widget.user.isoCountryCode1;
+    userModified.locality1 =
+        widget.option == 1 ? locality : widget.user.locality1;
+    userModified.subAdministrativeArea1 = widget.option == 1
+        ? subAdministrativeArea
+        : widget.user.subAdministrativeArea1;
+    userModified.subLocality1 =
+        widget.option == 1 ? subLocality : widget.user.subLocality1;
+
+    userModified.street1 = userModified.address2 =
         widget.option == 2 ? _direccionController.text : widget.user.address2;
     userModified.latitude2 =
         widget.option == 2 ? latitud : widget.user.latitude2;
     userModified.longitude2 =
         widget.option == 2 ? longitud : widget.user.longitude2;
+
+    userModified.street2 = widget.option == 2 ? street : widget.user.street2;
+    userModified.administrativeArea2 = widget.option == 2
+        ? administrativeArea
+        : widget.user.administrativeArea2;
+    userModified.country2 = widget.option == 2 ? country : widget.user.country2;
+    userModified.isoCountryCode2 =
+        widget.option == 2 ? isoCountryCode : widget.user.isoCountryCode2;
+    userModified.locality2 =
+        widget.option == 2 ? locality : widget.user.locality2;
+    userModified.subAdministrativeArea2 = widget.option == 2
+        ? subAdministrativeArea
+        : widget.user.subAdministrativeArea2;
+    userModified.subLocality2 =
+        widget.option == 2 ? subLocality : widget.user.subLocality2;
+
     userModified.address3 =
         widget.option == 3 ? _direccionController.text : widget.user.address3;
     userModified.latitude3 =
         widget.option == 3 ? latitud : widget.user.latitude3;
     userModified.longitude3 =
         widget.option == 3 ? longitud : widget.user.longitude3;
+
+    userModified.street3 = widget.option == 3 ? street : widget.user.street3;
+    userModified.administrativeArea3 = widget.option == 3
+        ? administrativeArea
+        : widget.user.administrativeArea3;
+    userModified.country3 = widget.option == 3 ? country : widget.user.country3;
+    userModified.isoCountryCode3 =
+        widget.option == 3 ? isoCountryCode : widget.user.isoCountryCode3;
+    userModified.locality3 =
+        widget.option == 3 ? locality : widget.user.locality3;
+    userModified.subAdministrativeArea3 = widget.option == 3
+        ? subAdministrativeArea
+        : widget.user.subAdministrativeArea3;
+    userModified.subLocality3 =
+        widget.option == 3 ? subLocality : widget.user.subLocality3;
 
     // var connectivityResult = await Connectivity().checkConnectivity();
 
