@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:avon_app/helpers/constants.dart';
+import 'package:avon_app/screens/take_picture_screen.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:avon_app/components/loader_component.dart';
-
 import 'package:avon_app/helpers/api_helper.dart';
 import 'package:avon_app/models/response.dart';
-import 'package:avon_app/screens/take_picture_screen.dart';
 
 class RegisterUserScreen extends StatefulWidget {
   const RegisterUserScreen({Key? key}) : super(key: key);
