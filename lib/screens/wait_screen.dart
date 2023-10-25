@@ -6,6 +6,6 @@ class WaitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: LoaderComponent(text: 'Por favor espere...'));
+    return const Scaffold(body: LoaderComponent(text: 'Por favor espere...'));
   }
 }

@@ -8,7 +8,7 @@ import 'package:avon_app/models/token.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final Token token;
-  ChangePasswordScreen({required this.token});
+  const ChangePasswordScreen({Key? key, required this.token}) : super(key: key);
 
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
@@ -20,17 +20,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   String _currentPassword = '';
   String _currentPasswordError = '';
   bool _currentPasswordShowError = false;
-  TextEditingController _currentPasswordController = TextEditingController();
 
   String _newPassword = '';
   String _newPasswordError = '';
   bool _newPasswordShowError = false;
-  TextEditingController _newPasswordController = TextEditingController();
 
   String _confirmPassword = '';
   String _confirmPasswordError = '';
   bool _confirmPasswordShowError = false;
-  TextEditingController _confirmPasswordController = TextEditingController();
 
   bool _passwordShow = false;
 
@@ -38,7 +35,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Cambio de Contraseña'),
+          title: const Text('Cambio de Contraseña'),
         ),
         body: Stack(
           children: [
@@ -51,7 +48,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               ],
             ),
             _showLoader
-                ? LoaderComponent(
+                ? const LoaderComponent(
                     text: 'Por favor espere...',
                   )
                 : Container(),
@@ -61,18 +58,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _showCurrentPassword() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
           hintText: 'Ingresa la contraseña actual...',
           labelText: 'Contraseña actual',
           errorText: _currentPasswordShowError ? _currentPasswordError : null,
-          prefixIcon: Icon(Icons.lock),
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             icon: _passwordShow
-                ? Icon(Icons.visibility)
-                : Icon(Icons.visibility_off),
+                ? const Icon(Icons.visibility)
+                : const Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
@@ -90,18 +87,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _showNewPassword() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
           hintText: 'Ingresa la nueva contraseña...',
           labelText: 'Nueva Contraseña',
           errorText: _newPasswordShowError ? _newPasswordError : null,
-          prefixIcon: Icon(Icons.lock),
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             icon: _passwordShow
-                ? Icon(Icons.visibility)
-                : Icon(Icons.visibility_off),
+                ? const Icon(Icons.visibility)
+                : const Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
@@ -119,18 +116,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _showConfirmPassword() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
           hintText: 'Confirmación de contraseña...',
           labelText: 'Confirmación de contraseña',
           errorText: _confirmPasswordShowError ? _confirmPasswordError : null,
-          prefixIcon: Icon(Icons.lock),
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             icon: _passwordShow
-                ? Icon(Icons.visibility)
-                : Icon(Icons.visibility_off),
+                ? const Icon(Icons.visibility)
+                : const Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
@@ -148,7 +145,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _showButtons() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -163,7 +160,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       child: ElevatedButton(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Icon(Icons.lock),
             SizedBox(
               width: 15,
@@ -172,8 +169,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ],
         ),
         style: ElevatedButton.styleFrom(
-          primary: Color(0xFF120E43),
-          minimumSize: Size(double.infinity, 50),
+          backgroundColor: const Color(0xFF120E43),
+          minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
@@ -251,7 +248,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           title: 'Error',
           message: 'Verifica que estes conectado a internet.',
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -275,7 +272,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -285,7 +282,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         title: 'Confirmación',
         message: 'Su contraseña ha sido cambiada con éxito.',
         actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
+          const AlertDialogAction(key: null, label: 'Aceptar'),
         ]);
 
     Navigator.pop(context, 'yes');

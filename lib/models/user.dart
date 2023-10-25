@@ -139,55 +139,55 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['modulo'] = this.modulo;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['document'] = this.document;
-    data['address1'] = this.address1;
-    data['latitude1'] = this.latitude1;
-    data['longitude1'] = this.longitude1;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['modulo'] = modulo;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['document'] = document;
+    data['address1'] = address1;
+    data['latitude1'] = latitude1;
+    data['longitude1'] = longitude1;
 
-    data['street1'] = this.street1;
-    data['administrativeArea1'] = this.administrativeArea1;
-    data['country1'] = this.country1;
-    data['isoCountryCode1'] = this.isoCountryCode1;
-    data['locality1'] = this.locality1;
-    data['subAdministrativeArea1'] = this.subAdministrativeArea1;
-    data['subLocality1'] = this.subLocality1;
+    data['street1'] = street1;
+    data['administrativeArea1'] = administrativeArea1;
+    data['country1'] = country1;
+    data['isoCountryCode1'] = isoCountryCode1;
+    data['locality1'] = locality1;
+    data['subAdministrativeArea1'] = subAdministrativeArea1;
+    data['subLocality1'] = subLocality1;
 
-    data['address2'] = this.address2;
-    data['latitude2'] = this.latitude2;
-    data['longitude2'] = this.longitude2;
+    data['address2'] = address2;
+    data['latitude2'] = latitude2;
+    data['longitude2'] = longitude2;
 
-    data['street2'] = this.street2;
-    data['administrativeArea2'] = this.administrativeArea2;
-    data['country2'] = this.country2;
-    data['isoCountryCode2'] = this.isoCountryCode2;
-    data['locality2'] = this.locality2;
-    data['subAdministrativeArea2'] = this.subAdministrativeArea2;
-    data['subLocality2'] = this.subLocality2;
+    data['street2'] = street2;
+    data['administrativeArea2'] = administrativeArea2;
+    data['country2'] = country2;
+    data['isoCountryCode2'] = isoCountryCode2;
+    data['locality2'] = locality2;
+    data['subAdministrativeArea2'] = subAdministrativeArea2;
+    data['subLocality2'] = subLocality2;
 
-    data['address3'] = this.address3;
-    data['latitude3'] = this.latitude3;
-    data['longitude3'] = this.longitude3;
+    data['address3'] = address3;
+    data['latitude3'] = latitude3;
+    data['longitude3'] = longitude3;
 
-    data['street3'] = this.street3;
-    data['administrativeArea3'] = this.administrativeArea3;
-    data['country3'] = this.country3;
-    data['isoCountryCode3'] = this.isoCountryCode3;
-    data['locality3'] = this.locality3;
-    data['subAdministrativeArea3'] = this.subAdministrativeArea3;
-    data['subLocality3'] = this.subLocality3;
+    data['street3'] = street3;
+    data['administrativeArea3'] = administrativeArea3;
+    data['country3'] = country3;
+    data['isoCountryCode3'] = isoCountryCode3;
+    data['locality3'] = locality3;
+    data['subAdministrativeArea3'] = subAdministrativeArea3;
+    data['subLocality3'] = subLocality3;
 
-    data['imageId'] = this.imageId;
-    data['imageFullPath'] = this.imageFullPath;
-    data['userType'] = this.userType;
-    data['fullName'] = this.fullName;
-    data['id'] = this.id;
-    data['userName'] = this.userName;
-    data['email'] = this.email;
-    data['phoneNumber'] = this.phoneNumber;
+    data['imageId'] = imageId;
+    data['imageFullPath'] = imageFullPath;
+    data['userType'] = userType;
+    data['fullName'] = fullName;
+    data['id'] = id;
+    data['userName'] = userName;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
     return data;
   }
 }

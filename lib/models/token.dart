@@ -52,14 +52,14 @@ class Token {
   Token.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     expiration = json['expiration'];
-    user = new User.fromJson(json['user']);
+    user = User.fromJson(json['user']);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['token'] = this.token;
-    data['expiration'] = this.expiration;
-    data['user'] = this.user.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['token'] = token;
+    data['expiration'] = expiration;
+    data['user'] = user.toJson();
     return data;
   }
 }

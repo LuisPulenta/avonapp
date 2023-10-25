@@ -5,7 +5,6 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,8 +23,12 @@ class UserScreen extends StatefulWidget {
   final User user;
   final bool myProfile;
 
-  UserScreen(
-      {required this.token, required this.user, required this.myProfile});
+  const UserScreen(
+      {Key? key,
+      required this.token,
+      required this.user,
+      required this.myProfile})
+      : super(key: key);
 
   @override
   _UserScreenState createState() => _UserScreenState();
@@ -42,60 +45,55 @@ class _UserScreenState extends State<UserScreen> {
   String _firstName = '';
   String _firstNameError = '';
   bool _firstNameShowError = false;
-  TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
 
   String _lastName = '';
   String _lastNameError = '';
   bool _lastNameShowError = false;
-  TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
 
   String _document = '';
-  String _documentError = '';
-  bool _documentShowError = false;
-  TextEditingController _documentController = TextEditingController();
+  final String _documentError = '';
+  final bool _documentShowError = false;
+  final TextEditingController _documentController = TextEditingController();
 
   String? _address1 = '';
-  String _address1Error = '';
-  bool _address1ShowError = false;
-  TextEditingController _address1Controller = TextEditingController();
+  final String _address1Error = '';
+  final bool _address1ShowError = false;
+  final TextEditingController _address1Controller = TextEditingController();
 
   String? _address2 = '';
-  String _address2Error = '';
-  bool _address2ShowError = false;
-  TextEditingController _address2Controller = TextEditingController();
+  final String _address2Error = '';
+  final bool _address2ShowError = false;
+  final TextEditingController _address2Controller = TextEditingController();
 
   String? _address3 = '';
-  String _address3Error = '';
-  bool _address3ShowError = false;
-  TextEditingController _address3Controller = TextEditingController();
+  final String _address3Error = '';
+  final bool _address3ShowError = false;
+  final TextEditingController _address3Controller = TextEditingController();
 
   String _email = '';
-  String _emailError = '';
-  bool _emailShowError = false;
-  TextEditingController _emailController = TextEditingController();
+  final String _emailError = '';
+  final bool _emailShowError = false;
+  final TextEditingController _emailController = TextEditingController();
 
   String _phoneNumber = '';
   String _phoneNumberError = '';
   bool _phoneNumberShowError = false;
-  TextEditingController _phoneNumberController = TextEditingController();
-
-  double _latitude1 = 0.0;
-  double _longitude1 = 0.0;
-  double _latitude2 = 0.0;
-  double _longitude2 = 0.0;
-  double _latitude3 = 0.0;
-  double _longitude3 = 0.0;
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   String _direccion = '';
-  Position _positionUser = Position(
-      longitude: 0,
-      latitude: 0,
+  Position _positionUser = const Position(
+      longitude: 0.0,
+      latitude: 0.0,
       timestamp: null,
       accuracy: 0,
       altitude: 0,
       heading: 0,
       speed: 0,
-      speedAccuracy: 0);
+      speedAccuracy: 0,
+      altitudeAccuracy: 0,
+      headingAccuracy: 0);
 
   @override
   void initState() {
@@ -107,7 +105,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFFFFFCC),
+        backgroundColor: const Color(0xFFFFFFCC),
         appBar: AppBar(
           title: Text(_user.id.isEmpty ? 'Nuevo Usuario' : _user.fullName),
         ),
@@ -116,7 +114,7 @@ class _UserScreenState extends State<UserScreen> {
             SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   _showPhoto(),
@@ -129,14 +127,14 @@ class _UserScreenState extends State<UserScreen> {
                   _showEmail(),
                   _showPhoneNumber(),
                   _showButtons(),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                 ],
               ),
             ),
             _showLoader
-                ? LoaderComponent(
+                ? const LoaderComponent(
                     text: 'Por favor espere...',
                   )
                 : Container(),
@@ -147,9 +145,9 @@ class _UserScreenState extends State<UserScreen> {
   Widget _showPhoto() {
     return Stack(children: <Widget>[
       Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 10),
         child: _user.id.isEmpty && !_photoChanged
-            ? Image(
+            ? const Image(
                 image: AssetImage('assets/nouser.png'),
                 width: 160,
                 height: 160,
@@ -161,11 +159,12 @@ class _UserScreenState extends State<UserScreen> {
                         width: 160, height: 160, fit: BoxFit.cover)
                     : CachedNetworkImage(
                         imageUrl: _user.imageFullPath,
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                         fit: BoxFit.cover,
                         height: 160,
                         width: 160,
-                        placeholder: (context, url) => Image(
+                        placeholder: (context, url) => const Image(
                           image: AssetImage('assets/logo.png'),
                           fit: BoxFit.cover,
                           height: 160,
@@ -185,7 +184,7 @@ class _UserScreenState extends State<UserScreen> {
                 color: Colors.green[50],
                 height: 60,
                 width: 60,
-                child: Icon(
+                child: const Icon(
                   Icons.photo_camera,
                   size: 40,
                   color: Colors.black,
@@ -204,7 +203,7 @@ class _UserScreenState extends State<UserScreen> {
                 color: Colors.green[50],
                 height: 60,
                 width: 60,
-                child: Icon(
+                child: const Icon(
                   Icons.image,
                   size: 40,
                   color: Colors.black,
@@ -217,7 +216,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showFirstName() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _firstNameController,
         decoration: InputDecoration(
@@ -226,7 +225,7 @@ class _UserScreenState extends State<UserScreen> {
             hintText: 'Ingresa nombres...',
             labelText: 'Nombres',
             errorText: _firstNameShowError ? _firstNameError : null,
-            suffixIcon: Icon(Icons.person),
+            suffixIcon: const Icon(Icons.person),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -238,7 +237,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showLastName() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _lastNameController,
         decoration: InputDecoration(
@@ -247,7 +246,7 @@ class _UserScreenState extends State<UserScreen> {
             hintText: 'Ingresa apellido...',
             labelText: 'Apellido',
             errorText: _lastNameShowError ? _lastNameError : null,
-            suffixIcon: Icon(Icons.person),
+            suffixIcon: const Icon(Icons.person),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -259,7 +258,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showDocument() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _documentController,
         keyboardType: TextInputType.number,
@@ -270,7 +269,7 @@ class _UserScreenState extends State<UserScreen> {
             hintText: 'Ingresa documento...',
             labelText: 'Documento',
             errorText: _documentShowError ? _documentError : null,
-            suffixIcon: Icon(Icons.assignment_ind),
+            suffixIcon: const Icon(Icons.assignment_ind),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -282,7 +281,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showAddress1() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         children: [
           Expanded(
@@ -295,7 +294,7 @@ class _UserScreenState extends State<UserScreen> {
                   hintText: 'Ingresa dirección...',
                   labelText: 'Dirección 1',
                   errorText: _address1ShowError ? _address1Error : null,
-                  suffixIcon: Icon(Icons.home),
+                  suffixIcon: const Icon(Icons.home),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
               onChanged: (value) {
@@ -303,7 +302,7 @@ class _UserScreenState extends State<UserScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           IconButton(
@@ -312,8 +311,8 @@ class _UserScreenState extends State<UserScreen> {
                 _address();
               },
               color: Colors.red,
-              icon: Icon(Icons.location_on, size: 40)),
-          SizedBox(
+              icon: const Icon(Icons.location_on, size: 40)),
+          const SizedBox(
             width: 10,
           ),
         ],
@@ -323,7 +322,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showAddress2() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         children: [
           Expanded(
@@ -336,7 +335,7 @@ class _UserScreenState extends State<UserScreen> {
                   hintText: 'Ingresa dirección...',
                   labelText: 'Dirección 2',
                   errorText: _address2ShowError ? _address2Error : null,
-                  suffixIcon: Icon(Icons.home),
+                  suffixIcon: const Icon(Icons.home),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
               onChanged: (value) {
@@ -344,7 +343,7 @@ class _UserScreenState extends State<UserScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           IconButton(
@@ -353,8 +352,8 @@ class _UserScreenState extends State<UserScreen> {
                 _address();
               },
               color: Colors.red,
-              icon: Icon(Icons.location_on, size: 40)),
-          SizedBox(
+              icon: const Icon(Icons.location_on, size: 40)),
+          const SizedBox(
             width: 10,
           ),
         ],
@@ -364,7 +363,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showAddress3() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         children: [
           Expanded(
@@ -377,7 +376,7 @@ class _UserScreenState extends State<UserScreen> {
                   hintText: 'Ingresa dirección...',
                   labelText: 'Dirección 3',
                   errorText: _address3ShowError ? _address3Error : null,
-                  suffixIcon: Icon(Icons.home),
+                  suffixIcon: const Icon(Icons.home),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
               onChanged: (value) {
@@ -385,7 +384,7 @@ class _UserScreenState extends State<UserScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           IconButton(
@@ -394,8 +393,8 @@ class _UserScreenState extends State<UserScreen> {
                 _address();
               },
               color: Colors.red,
-              icon: Icon(Icons.location_on, size: 40)),
-          SizedBox(
+              icon: const Icon(Icons.location_on, size: 40)),
+          const SizedBox(
             width: 10,
           ),
         ],
@@ -405,7 +404,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showEmail() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         enabled: _user.id.isEmpty,
         controller: _emailController,
@@ -417,7 +416,7 @@ class _UserScreenState extends State<UserScreen> {
             hintText: 'Ingresa Email...',
             labelText: 'Email',
             errorText: _emailShowError ? _emailError : null,
-            suffixIcon: Icon(Icons.email),
+            suffixIcon: const Icon(Icons.email),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -429,7 +428,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showPhoneNumber() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _phoneNumberController,
         keyboardType: TextInputType.phone,
@@ -439,7 +438,7 @@ class _UserScreenState extends State<UserScreen> {
             hintText: 'Ingresa Teléfono...',
             labelText: 'Teléfono',
             errorText: _phoneNumberShowError ? _phoneNumberError : null,
-            suffixIcon: Icon(Icons.phone),
+            suffixIcon: const Icon(Icons.phone),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -451,7 +450,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _showButtons() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -459,7 +458,7 @@ class _UserScreenState extends State<UserScreen> {
             child: ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Icon(Icons.save),
                   SizedBox(
                     width: 15,
@@ -468,8 +467,8 @@ class _UserScreenState extends State<UserScreen> {
                 ],
               ),
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFF120E43),
-                minimumSize: Size(100, 50),
+                backgroundColor: const Color(0xFF120E43),
+                minimumSize: const Size(100, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -479,7 +478,7 @@ class _UserScreenState extends State<UserScreen> {
           ),
           _user.id.isEmpty
               ? Container()
-              : SizedBox(
+              : const SizedBox(
                   width: 20,
                 ),
           _user.id.isEmpty
@@ -489,7 +488,7 @@ class _UserScreenState extends State<UserScreen> {
                       child: ElevatedButton(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(Icons.lock),
                             SizedBox(
                               width: 15,
@@ -498,8 +497,8 @@ class _UserScreenState extends State<UserScreen> {
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFFB4161B),
-                          minimumSize: Size(100, 50),
+                          backgroundColor: const Color(0xFFB4161B),
+                          minimumSize: const Size(100, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -511,7 +510,7 @@ class _UserScreenState extends State<UserScreen> {
                       child: ElevatedButton(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(Icons.delete),
                             SizedBox(
                               width: 15,
@@ -523,7 +522,7 @@ class _UserScreenState extends State<UserScreen> {
                           backgroundColor:
                               MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
-                            return Color(0xFFB4161B);
+                            return const Color(0xFFB4161B);
                           }),
                         ),
                         onPressed: () => _confirmDelete(),
@@ -610,7 +609,7 @@ class _UserScreenState extends State<UserScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -681,7 +680,7 @@ class _UserScreenState extends State<UserScreen> {
           title: 'Error',
           message: 'Verifica que estés conectado a Internet',
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -699,7 +698,7 @@ class _UserScreenState extends State<UserScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -712,8 +711,8 @@ class _UserScreenState extends State<UserScreen> {
         title: 'Confirmación',
         message: '¿Estás seguro de querer borrar el registro?',
         actions: <AlertDialogAction>[
-          AlertDialogAction(key: 'no', label: 'No'),
-          AlertDialogAction(key: 'yes', label: 'Sí'),
+          const AlertDialogAction(key: 'no', label: 'No'),
+          const AlertDialogAction(key: 'yes', label: 'Sí'),
         ]);
     if (response == 'yes') {
       _deleteRecord();
@@ -736,7 +735,7 @@ class _UserScreenState extends State<UserScreen> {
           title: 'Error',
           message: 'Verifica que estés conectado a Internet',
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -754,7 +753,7 @@ class _UserScreenState extends State<UserScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -771,9 +770,9 @@ class _UserScreenState extends State<UserScreen> {
         title: 'Seleccionar cámara',
         message: '¿Qué cámara desea utilizar?',
         actions: <AlertDialogAction>[
-          AlertDialogAction(key: 'no', label: 'Trasera'),
-          AlertDialogAction(key: 'yes', label: 'Delantera'),
-          AlertDialogAction(key: 'cancel', label: 'Cancelar'),
+          const AlertDialogAction(key: 'no', label: 'Trasera'),
+          const AlertDialogAction(key: 'yes', label: 'Delantera'),
+          const AlertDialogAction(key: 'cancel', label: 'Cancelar'),
         ]);
     if (response1 == 'yes') {
       firstCamera = cameras.first;
@@ -819,9 +818,9 @@ class _UserScreenState extends State<UserScreen> {
     _document = _user.document;
     _documentController.text = _document;
 
-    _address1 = _user.address1!;
-    _address2 = _user.address2!;
-    _address3 = _user.address3!;
+    _address1 = _user.address1;
+    _address2 = _user.address2;
+    _address3 = _user.address3;
     _address1Controller.text = _address1.toString();
     _address2Controller.text = _address2.toString();
     _address3Controller.text = _address3.toString();
@@ -888,9 +887,9 @@ class _UserScreenState extends State<UserScreen> {
           _user.subLocality1 = userModified.subLocality1;
           _user.subLocality2 = userModified.subLocality2;
           _user.subLocality3 = userModified.subLocality3;
-          _address1 = _user.address1!;
-          _address2 = _user.address2!;
-          _address3 = _user.address3!;
+          _address1 = _user.address1;
+          _address2 = _user.address2;
+          _address3 = _user.address3;
           _address1Controller.text = _address1!;
           _address2Controller.text = _address2!;
           _address3Controller.text = _address3!;
@@ -900,7 +899,6 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Future _getPosition() async {
-    bool serviceEnabled;
     LocationPermission permission;
     // serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
@@ -941,18 +939,19 @@ class _UserScreenState extends State<UserScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                title: Text('Aviso'),
-                content:
-                    Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                  Text('El permiso de localización está negado.'),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ]),
+                title: const Text('Aviso'),
+                content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      Text('El permiso de localización está negado.'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ]),
                 actions: <Widget>[
                   TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text('Ok')),
+                      child: const Text('Ok')),
                 ],
               );
             });
@@ -968,19 +967,20 @@ class _UserScreenState extends State<UserScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              title: Text('Aviso'),
-              content:
-                  Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                Text(
-                    'El permiso de localización está negado permanentemente. No se puede requerir este permiso.'),
-                SizedBox(
-                  height: 10,
-                ),
-              ]),
+              title: const Text('Aviso'),
+              content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const <Widget>[
+                    Text(
+                        'El permiso de localización está negado permanentemente. No se puede requerir este permiso.'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ]),
               actions: <Widget>[
                 TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Ok')),
+                    child: const Text('Ok')),
               ],
             );
           });
@@ -996,50 +996,5 @@ class _UserScreenState extends State<UserScreen> {
     _direccion = placemarks[0].street.toString() +
         " - " +
         placemarks[0].locality.toString();
-  }
-
-  Future<Null> _getUser() async {
-    setState(() {
-      _showLoader = true;
-    });
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estés conectado a Internet',
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-
-    Response response = await ApiHelper.getUser(widget.token, _user.id);
-
-    setState(() {
-      _showLoader = false;
-    });
-
-    if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-    setState(() {
-      _user = response.result;
-      _address1Controller.text = _user.address1.toString();
-      _address2Controller.text = _user.address2.toString();
-      _address3Controller.text = _user.address3.toString();
-    });
   }
 }

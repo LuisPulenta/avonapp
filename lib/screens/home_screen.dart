@@ -2,7 +2,6 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:avon_app/screens/direccion_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avon_app/helpers/api_helper.dart';
 import 'package:avon_app/models/response.dart';
@@ -14,19 +13,17 @@ import 'package:avon_app/screens/user_screen.dart';
 class HomeScreen extends StatefulWidget {
   final Token token;
 
-  HomeScreen({required this.token});
+  const HomeScreen({Key? key, required this.token}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool _showLoader = false;
   late User _user;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _user = widget.token.user;
     _getUser();
@@ -35,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff06292),
+      backgroundColor: const Color(0xfff06292),
       // appBar: AppBar(
       //   title: Text('Natura App'),
       // ),
@@ -48,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Icon(Icons.location_on),
                   SizedBox(
                     width: 20,
@@ -57,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFF7e04cc),
-                minimumSize: Size(100, 50),
+                backgroundColor: const Color(0xFF7e04cc),
+                minimumSize: const Size(100, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -68,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Icon(Icons.logout),
                   SizedBox(
                     width: 20,
@@ -77,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFFc41c9c),
-                minimumSize: Size(100, 50),
+                backgroundColor: const Color(0xFFc41c9c),
+                minimumSize: const Size(100, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -94,45 +91,46 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getBody() {
     return SingleChildScrollView(
       child: Container(
-        margin: EdgeInsets.all(30),
+        margin: const EdgeInsets.all(30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Image(
+            const Image(
               image: AssetImage('assets/logo.png'),
               width: 250,
             ),
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
             ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: CachedNetworkImage(
                   imageUrl: _user.imageFullPath,
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                   fit: BoxFit.cover,
                   height: 200,
                   width: 200,
-                  placeholder: (context, url) => Image(
+                  placeholder: (context, url) => const Image(
                     image: AssetImage('assets/loading.gif'),
                     fit: BoxFit.cover,
                     height: 200,
                     width: 200,
                   ),
                 )),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Center(
               child: Text(
                 'Bienvenido/a ${_user.fullName}',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
           ],
@@ -146,35 +144,29 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setBool('isRemembered', false);
     await prefs.setString('userBody', '');
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
-  Future<Null> _getUser() async {
-    setState(() {
-      _showLoader = true;
-    });
+  Future<void> _getUser() async {
+    setState(() {});
 
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
+      setState(() {});
       await showAlertDialog(
           context: context,
           title: 'Error',
           message: 'Verifica que estés conectado a Internet',
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
 
     Response response = await ApiHelper.getUser(widget.token, _user.id);
 
-    setState(() {
-      _showLoader = false;
-    });
+    setState(() {});
 
     if (!response.isSuccess) {
       await showAlertDialog(
@@ -182,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }

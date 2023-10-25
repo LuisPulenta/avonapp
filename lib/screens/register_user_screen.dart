@@ -27,54 +27,43 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   String _firstName = '';
   String _firstNameError = '';
   bool _firstNameShowError = false;
-  TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
 
   String _lastName = '';
   String _lastNameError = '';
   bool _lastNameShowError = false;
-  TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
 
   String _document = '';
   String _documentError = '';
   bool _documentShowError = false;
-  TextEditingController _documentController = TextEditingController();
+  final TextEditingController _documentController = TextEditingController();
 
-  String _address1 = '';
-  String _address1Error = '';
-  bool _address1ShowError = false;
-  TextEditingController _address1Controller = TextEditingController();
+  final String _address1 = '';
 
-  String _address2 = '';
-  String _address2Error = '';
-  bool _address2ShowError = false;
-  TextEditingController _address2Controller = TextEditingController();
+  final String _address2 = '';
 
-  String _address3 = '';
-  String _address3Error = '';
-  bool _address3ShowError = false;
-  TextEditingController _address3Controller = TextEditingController();
+  final String _address3 = '';
 
   String _email = '';
   String _emailError = '';
   bool _emailShowError = false;
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   String _phoneNumber = '';
   String _phoneNumberError = '';
   bool _phoneNumberShowError = false;
-  TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   bool _passwordShow = false;
 
   String _password = '';
   String _passwordError = '';
   bool _passwordShowError = false;
-  TextEditingController _passwordController = TextEditingController();
 
   String _confirm = '';
   String _confirmError = '';
   bool _confirmShowError = false;
-  TextEditingController _confirmController = TextEditingController();
 
   @override
   void initState() {
@@ -85,7 +74,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Nuevo Usuario'),
+          title: const Text('Nuevo Usuario'),
         ),
         body: Stack(
           children: [
@@ -104,14 +93,14 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   _showPassword(),
                   _showConfirm(),
                   _showButtons(),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                 ],
               ),
             ),
             _showLoader
-                ? LoaderComponent(
+                ? const LoaderComponent(
                     text: 'Por favor espere...',
                   )
                 : Container(),
@@ -123,9 +112,9 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     return InkWell(
       child: Stack(children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: 10),
+          margin: const EdgeInsets.only(top: 10),
           child: !_photoChanged
-              ? Image(
+              ? const Image(
                   image: AssetImage('assets/noimage.png'),
                   width: 160,
                   height: 160,
@@ -150,7 +139,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   color: Colors.green[50],
                   height: 60,
                   width: 60,
-                  child: Icon(
+                  child: const Icon(
                     Icons.photo_camera,
                     size: 40,
                     color: Colors.blue,
@@ -169,7 +158,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   color: Colors.green[50],
                   height: 60,
                   width: 60,
-                  child: Icon(
+                  child: const Icon(
                     Icons.image,
                     size: 40,
                     color: Colors.blue,
@@ -183,14 +172,14 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   Widget _showFirstName() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _firstNameController,
         decoration: InputDecoration(
             hintText: 'Ingresa nombres...',
             labelText: 'Nombres',
             errorText: _firstNameShowError ? _firstNameError : null,
-            suffixIcon: Icon(Icons.person),
+            suffixIcon: const Icon(Icons.person),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -202,14 +191,14 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   Widget _showLastName() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _lastNameController,
         decoration: InputDecoration(
             hintText: 'Ingresa nombres...',
             labelText: 'Apellido',
             errorText: _lastNameShowError ? _lastNameError : null,
-            suffixIcon: Icon(Icons.person),
+            suffixIcon: const Icon(Icons.person),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -221,7 +210,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   Widget _showDocument() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _documentController,
         keyboardType: TextInputType.number,
@@ -229,7 +218,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             hintText: 'Ingresa documento...',
             labelText: 'Documento',
             errorText: _documentShowError ? _documentError : null,
-            suffixIcon: Icon(Icons.assignment_ind),
+            suffixIcon: const Icon(Icons.assignment_ind),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -239,69 +228,9 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     );
   }
 
-  Widget _showAddress1() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _address1Controller,
-        keyboardType: TextInputType.streetAddress,
-        decoration: InputDecoration(
-            hintText: 'Ingresa dirección...',
-            labelText: 'Dirección',
-            errorText: _address1ShowError ? _address1Error : null,
-            suffixIcon: Icon(Icons.home),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-        onChanged: (value) {
-          _address1 = value;
-        },
-      ),
-    );
-  }
-
-  Widget _showAddress2() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _address2Controller,
-        keyboardType: TextInputType.streetAddress,
-        decoration: InputDecoration(
-            hintText: 'Ingresa dirección...',
-            labelText: 'Dirección',
-            errorText: _address2ShowError ? _address2Error : null,
-            suffixIcon: Icon(Icons.home),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-        onChanged: (value) {
-          _address2 = value;
-        },
-      ),
-    );
-  }
-
-  Widget _showAddress3() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _address3Controller,
-        keyboardType: TextInputType.streetAddress,
-        decoration: InputDecoration(
-            hintText: 'Ingresa dirección...',
-            labelText: 'Dirección',
-            errorText: _address3ShowError ? _address3Error : null,
-            suffixIcon: Icon(Icons.home),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-        onChanged: (value) {
-          _address3 = value;
-        },
-      ),
-    );
-  }
-
   Widget _showEmail() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
@@ -309,7 +238,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             hintText: 'Ingresa Email...',
             labelText: 'Email',
             errorText: _emailShowError ? _emailError : null,
-            suffixIcon: Icon(Icons.email),
+            suffixIcon: const Icon(Icons.email),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -321,7 +250,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   Widget _showPhoneNumber() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         controller: _phoneNumberController,
         keyboardType: TextInputType.phone,
@@ -329,7 +258,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             hintText: 'Ingresa Teléfono...',
             labelText: 'Teléfono',
             errorText: _phoneNumberShowError ? _phoneNumberError : null,
-            suffixIcon: Icon(Icons.phone),
+            suffixIcon: const Icon(Icons.phone),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -341,18 +270,18 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   Widget _showPassword() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
           hintText: 'Ingresa una contraseña...',
           labelText: 'Contraseña',
           errorText: _passwordShowError ? _passwordError : null,
-          prefixIcon: Icon(Icons.lock),
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             icon: _passwordShow
-                ? Icon(Icons.visibility)
-                : Icon(Icons.visibility_off),
+                ? const Icon(Icons.visibility)
+                : const Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
@@ -370,18 +299,18 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   Widget _showConfirm() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
           hintText: 'Ingresa la confirmación de contraseña...',
           labelText: 'Confirmación de contraseña',
           errorText: _confirmShowError ? _confirmError : null,
-          prefixIcon: Icon(Icons.lock),
+          prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             icon: _passwordShow
-                ? Icon(Icons.visibility)
-                : Icon(Icons.visibility_off),
+                ? const Icon(Icons.visibility)
+                : const Icon(Icons.visibility_off),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
@@ -399,7 +328,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   Widget _showButtons() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -418,9 +347,9 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
         title: 'Seleccionar cámara',
         message: '¿Qué cámara desea utilizar?',
         actions: <AlertDialogAction>[
-          AlertDialogAction(key: 'no', label: 'Trasera'),
-          AlertDialogAction(key: 'yes', label: 'Delantera'),
-          AlertDialogAction(key: 'cancel', label: 'Cancelar'),
+          const AlertDialogAction(key: 'no', label: 'Trasera'),
+          const AlertDialogAction(key: 'yes', label: 'Delantera'),
+          const AlertDialogAction(key: 'cancel', label: 'Cancelar'),
         ]);
     if (response1 == 'yes') {
       firstCamera = cameras.first;
@@ -461,7 +390,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       child: ElevatedButton(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Icon(Icons.person_add),
             SizedBox(
               width: 15,
@@ -470,8 +399,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           ],
         ),
         style: ElevatedButton.styleFrom(
-          primary: Color(0xFF120E43),
-          minimumSize: Size(double.infinity, 50),
+          backgroundColor: const Color(0xFF120E43),
+          minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
@@ -608,7 +537,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           title: 'Error',
           message: 'Verifica que estés conectado a Internet',
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -620,9 +549,9 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     }
 
     Map<String, dynamic> request = {
-      'modulo': Constants.Modulo,
-      'firstName': PLMayusc(_firstName),
-      'lastName': PLMayusc(_lastName),
+      'modulo': Constants.modulo,
+      'firstName': pLMayusc(_firstName),
+      'lastName': pLMayusc(_lastName),
       'document': _document,
       'address1': _address1,
       'address2': _address2,
@@ -646,7 +575,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -657,13 +586,13 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
         message:
             'Se ha enviado un correo con las instrucciones para activar el usuario. Por favor actívelo para poder ingresar a la Aplicación. Luego ingrese a la Aplicación e ingrese al menos una Dirección para completar el Proceso de Registro.',
         actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
+          const AlertDialogAction(key: null, label: 'Aceptar'),
         ]);
 
     Navigator.pop(context, 'yes');
   }
 
-  String PLMayusc(String string) {
+  String pLMayusc(String string) {
     String name = '';
     bool isSpace = false;
     String letter = '';

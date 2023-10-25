@@ -1,13 +1,9 @@
-import 'dart:async';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:avon_app/components/loader_component.dart';
-import 'package:avon_app/helpers/api_helper.dart';
-import 'package:avon_app/models/response.dart';
 import 'package:avon_app/models/token.dart';
 import 'package:avon_app/models/user.dart';
 
@@ -19,22 +15,22 @@ class DireccionScreen extends StatefulWidget {
   final String direccionUser;
 
   const DireccionScreen(
-      {required this.token,
+      {Key? key,
+      required this.token,
       required this.user,
       required this.option,
       required this.positionUser,
-      required this.direccionUser});
+      required this.direccionUser})
+      : super(key: key);
 
   @override
   _DireccionScreenState createState() => _DireccionScreenState();
 }
 
 class _DireccionScreenState extends State<DireccionScreen> {
-  String _direccion = '';
-
-  String _direccionError = '';
-  bool _direccionShowError = false;
-  TextEditingController _direccionController = TextEditingController();
+  final String _direccionError = '';
+  final bool _direccionShowError = false;
+  final TextEditingController _direccionController = TextEditingController();
   bool ubicOk = false;
   double latitud = 0;
   double longitud = 0;
@@ -49,7 +45,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
   String locality = '';
   String subAdministrativeArea = '';
   String subLocality = '';
-  Position position = Position(
+  Position position = const Position(
       longitude: 0,
       latitude: 0,
       timestamp: null,
@@ -57,18 +53,17 @@ class _DireccionScreenState extends State<DireccionScreen> {
       altitude: 0,
       heading: 0,
       speed: 0,
-      speedAccuracy: 0);
+      speedAccuracy: 0,
+      altitudeAccuracy: 0,
+      headingAccuracy: 0);
   CameraPosition _initialPosition =
-      CameraPosition(target: LatLng(31, 64), zoom: 16.0);
+      const CameraPosition(target: LatLng(31, 64), zoom: 16.0);
   //static const LatLng _center = const LatLng(-31.4332373, -64.226344);
 
-  LatLng _center = LatLng(0, 0);
-
-  Completer<GoogleMapController> _controller = Completer();
+  LatLng _center = const LatLng(0, 0);
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialPosition = CameraPosition(
         target:
@@ -79,81 +74,64 @@ class _DireccionScreenState extends State<DireccionScreen> {
         LatLng(widget.positionUser.latitude, widget.positionUser.longitude);
   }
 
-  Future _getPosition() async {
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    latitud = position.latitude;
-    longitud = position.longitude;
-    direccion = placemarks[0].street.toString() +
-        " - " +
-        placemarks[0].locality.toString();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dirección"),
+        title: const Text("Dirección"),
       ),
       body: Stack(
         children: [
           ubicOk == true
-              ? Container(
-                  child: Stack(children: <Widget>[
-                    GoogleMap(
-                      myLocationEnabled: false,
-                      initialCameraPosition: _initialPosition,
-                      onCameraMove: _onCameraMove,
-                      markers: _markers,
-                      mapType: _defaultMapType,
+              ? Stack(children: <Widget>[
+                  GoogleMap(
+                    myLocationEnabled: false,
+                    initialCameraPosition: _initialPosition,
+                    onCameraMove: _onCameraMove,
+                    markers: _markers,
+                    mapType: _defaultMapType,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 80, right: 10),
+                    alignment: Alignment.topRight,
+                    child: Column(children: <Widget>[
+                      FloatingActionButton(
+                          child: const Icon(Icons.layers),
+                          elevation: 5,
+                          backgroundColor: const Color(0xfff4ab04),
+                          onPressed: () {
+                            _changeMapType();
+                          }),
+                    ]),
+                  ),
+                  const Center(
+                    child: Icon(
+                      Icons.my_location,
+                      color: Color(0xFFfc6c0c),
+                      size: 50,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 80, right: 10),
-                      alignment: Alignment.topRight,
-                      child: Column(children: <Widget>[
-                        FloatingActionButton(
-                            child: Icon(Icons.layers),
-                            elevation: 5,
-                            backgroundColor: Color(0xfff4ab04),
-                            onPressed: () {
-                              _changeMapType();
-                            }),
-                      ]),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: _direccionController,
+                      decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          hintText: 'Dirección...',
+                          labelText: 'Dirección',
+                          errorText:
+                              _direccionShowError ? _direccionError : null,
+                          prefixIcon: const Icon(Icons.home),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      onChanged: (value) {},
                     ),
-                    Center(
-                      child: Icon(
-                        Icons.my_location,
-                        color: Color(0xFFfc6c0c),
-                        size: 50,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: TextField(
-                        controller: _direccionController,
-                        decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            hintText: 'Dirección...',
-                            labelText: 'Dirección',
-                            errorText:
-                                _direccionShowError ? _direccionError : null,
-                            prefixIcon: Icon(Icons.home),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        onChanged: (value) {
-                          _direccion = value;
-                        },
-                      ),
-                    ),
-                  ]),
-                )
+                  ),
+                ])
               : Container(),
           _showLoader
-              ? LoaderComponent(
+              ? const LoaderComponent(
                   text: 'Por favor espere...',
                 )
               : Container(),
@@ -166,7 +144,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
             ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Icon(Icons.location_on),
                   SizedBox(
                     width: 20,
@@ -177,7 +155,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                  return Color(0xFFe4540c);
+                  return const Color(0xFFe4540c);
                 }),
               ),
               onPressed: () => _marcar(),
@@ -185,7 +163,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
             ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Icon(Icons.save),
                   SizedBox(
                     width: 20,
@@ -196,7 +174,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                  return Color(0xFFe4540c);
+                  return const Color(0xFFe4540c);
                 }),
               ),
               onPressed: () => _guardar(),
@@ -240,7 +218,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
       ),
       icon: BitmapDescriptor.defaultMarker,
     ));
-    var a = placemarks[0];
+
     setState(() {
       _showSnackbar();
     });
@@ -256,13 +234,13 @@ class _DireccionScreenState extends State<DireccionScreen> {
   }
 
   _guardar() async {
-    if (_markers.length == 0) {
+    if (_markers.isEmpty) {
       await showAlertDialog(
           context: context,
           title: 'Error',
           message: "Debe marcar un lugar",
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -274,7 +252,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
           message:
               "La latitud o la longitud del punto marcado están en cero. Intente marcar de nuevo.",
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -282,29 +260,6 @@ class _DireccionScreenState extends State<DireccionScreen> {
     setState(() {
       _showLoader = true;
     });
-
-    Map<String, dynamic> request = {
-      'id': widget.user.id,
-      'modulo': widget.user.modulo,
-      'firstName': widget.user.firstName,
-      'lastName': widget.user.lastName,
-      'document': widget.user.document,
-      'address1':
-          widget.option == 1 ? _direccionController.text : widget.user.address1,
-      'latitude1': widget.option == 1 ? latitud : widget.user.latitude1,
-      'longitude1': widget.option == 1 ? longitud : widget.user.longitude1,
-      'address2':
-          widget.option == 2 ? _direccionController.text : widget.user.address2,
-      'latitude2': widget.option == 2 ? latitud : widget.user.latitude2,
-      'longitude2': widget.option == 2 ? longitud : widget.user.longitude2,
-      'address3':
-          widget.option == 3 ? _direccionController.text : widget.user.address3,
-      'latitude3': widget.option == 3 ? latitud : widget.user.latitude3,
-      'longitude3': widget.option == 3 ? longitud : widget.user.longitude3,
-      'email': widget.user.email,
-      'userName': widget.user.email,
-      'phoneNumber': widget.user.phoneNumber,
-    };
 
     User userModified = widget.user;
     userModified.address1 =
@@ -415,7 +370,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
 //*****************************************************************************
 
   void _showSnackbar() {
-    SnackBar snackbar = SnackBar(
+    SnackBar snackbar = const SnackBar(
       content: Text(
           "Verifique que la dirección sea correcta. Sino puede editarla antes de seleccionarla."),
       backgroundColor: Color(0xFFe4540c),

@@ -19,13 +19,12 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   String _email = '';
   String _emailError = '';
   bool _emailShowError = false;
-  TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recuperar contraseña'),
+        title: const Text('Recuperar contraseña'),
       ),
       body: Stack(
         children: <Widget>[
@@ -36,7 +35,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
             ],
           ),
           _showLoader
-              ? LoaderComponent(
+              ? const LoaderComponent(
                   text: 'Por favor espere...',
                 )
               : Container(),
@@ -47,15 +46,15 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
 
   Widget _showEmail() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           hintText: 'Ingresa tu email...',
           labelText: 'Email',
           errorText: _emailShowError ? _emailError : null,
-          prefixIcon: Icon(Icons.alternate_email),
-          suffixIcon: Icon(Icons.email),
+          prefixIcon: const Icon(Icons.alternate_email),
+          suffixIcon: const Icon(Icons.email),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
@@ -67,7 +66,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
 
   Widget _showButtons() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -80,10 +79,10 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   Widget _showRecoverButton() {
     return Expanded(
       child: ElevatedButton(
-        child: Text('Recuperar Contraseña'),
+        child: const Text('Recuperar Contraseña'),
         style: ElevatedButton.styleFrom(
-          primary: Color(0xFF120E43),
-          minimumSize: Size(double.infinity, 50),
+          backgroundColor: const Color(0xFF120E43),
+          minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
@@ -134,7 +133,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
           title: 'Error',
           message: 'Verifica que estes conectado a internet.',
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -158,7 +157,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -169,7 +168,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
         message:
             'Se le ha enviado un correo con las instrucciones para recuperar su contraseña',
         actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
+          const AlertDialogAction(key: null, label: 'Aceptar'),
         ]);
 
     Navigator.pop(context);

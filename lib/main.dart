@@ -7,7 +7,7 @@ import 'package:avon_app/screens/home_screen.dart';
 import 'package:avon_app/screens/login_screen.dart';
 import 'package:avon_app/screens/wait_screen.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -33,9 +33,9 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Natura App',
       home: _isLoading
-          ? WaitScreen()
+          ? const WaitScreen()
           : _showLoginPage
-              ? LoginScreen()
+              ? const LoginScreen()
               : HomeScreen(token: _token),
     );
   }
