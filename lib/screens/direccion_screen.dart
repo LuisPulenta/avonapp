@@ -1,23 +1,20 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:avon_app/models/cliente.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:avon_app/components/loader_component.dart';
-import 'package:avon_app/models/token.dart';
-import 'package:avon_app/models/user.dart';
 
 class DireccionScreen extends StatefulWidget {
-  final Token token;
-  final User user;
+  final Cliente cliente;
   final int option;
   final Position positionUser;
   final String direccionUser;
 
   const DireccionScreen(
       {Key? key,
-      required this.token,
-      required this.user,
+      required this.cliente,
       required this.option,
       required this.positionUser,
       required this.direccionUser})
@@ -261,72 +258,78 @@ class _DireccionScreenState extends State<DireccionScreen> {
       _showLoader = true;
     });
 
-    User userModified = widget.user;
-    userModified.address1 =
-        widget.option == 1 ? _direccionController.text : widget.user.address1;
+    Cliente userModified = widget.cliente;
+    userModified.address1 = widget.option == 1
+        ? _direccionController.text
+        : widget.cliente.address1;
     userModified.latitude1 =
-        widget.option == 1 ? latitud : widget.user.latitude1;
+        widget.option == 1 ? latitud : widget.cliente.latitude1;
     userModified.longitude1 =
-        widget.option == 1 ? longitud : widget.user.longitude1;
+        widget.option == 1 ? longitud : widget.cliente.longitude1;
 
-    userModified.street1 = widget.option == 1 ? street : widget.user.street1;
+    userModified.street1 = widget.option == 1 ? street : widget.cliente.street1;
     userModified.administrativeArea1 = widget.option == 1
         ? administrativeArea
-        : widget.user.administrativeArea1;
-    userModified.country1 = widget.option == 1 ? country : widget.user.country1;
+        : widget.cliente.administrativeArea1;
+    userModified.country1 =
+        widget.option == 1 ? country : widget.cliente.country1;
     userModified.isoCountryCode1 =
-        widget.option == 1 ? isoCountryCode : widget.user.isoCountryCode1;
+        widget.option == 1 ? isoCountryCode : widget.cliente.isoCountryCode1;
     userModified.locality1 =
-        widget.option == 1 ? locality : widget.user.locality1;
+        widget.option == 1 ? locality : widget.cliente.locality1;
     userModified.subAdministrativeArea1 = widget.option == 1
         ? subAdministrativeArea
-        : widget.user.subAdministrativeArea1;
+        : widget.cliente.subAdministrativeArea1;
     userModified.subLocality1 =
-        widget.option == 1 ? subLocality : widget.user.subLocality1;
+        widget.option == 1 ? subLocality : widget.cliente.subLocality1;
 
-    userModified.street1 = userModified.address2 =
-        widget.option == 2 ? _direccionController.text : widget.user.address2;
+    userModified.street1 = userModified.address2 = widget.option == 2
+        ? _direccionController.text
+        : widget.cliente.address2;
     userModified.latitude2 =
-        widget.option == 2 ? latitud : widget.user.latitude2;
+        widget.option == 2 ? latitud : widget.cliente.latitude2;
     userModified.longitude2 =
-        widget.option == 2 ? longitud : widget.user.longitude2;
+        widget.option == 2 ? longitud : widget.cliente.longitude2;
 
-    userModified.street2 = widget.option == 2 ? street : widget.user.street2;
+    userModified.street2 = widget.option == 2 ? street : widget.cliente.street2;
     userModified.administrativeArea2 = widget.option == 2
         ? administrativeArea
-        : widget.user.administrativeArea2;
-    userModified.country2 = widget.option == 2 ? country : widget.user.country2;
+        : widget.cliente.administrativeArea2;
+    userModified.country2 =
+        widget.option == 2 ? country : widget.cliente.country2;
     userModified.isoCountryCode2 =
-        widget.option == 2 ? isoCountryCode : widget.user.isoCountryCode2;
+        widget.option == 2 ? isoCountryCode : widget.cliente.isoCountryCode2;
     userModified.locality2 =
-        widget.option == 2 ? locality : widget.user.locality2;
+        widget.option == 2 ? locality : widget.cliente.locality2;
     userModified.subAdministrativeArea2 = widget.option == 2
         ? subAdministrativeArea
-        : widget.user.subAdministrativeArea2;
+        : widget.cliente.subAdministrativeArea2;
     userModified.subLocality2 =
-        widget.option == 2 ? subLocality : widget.user.subLocality2;
+        widget.option == 2 ? subLocality : widget.cliente.subLocality2;
 
-    userModified.address3 =
-        widget.option == 3 ? _direccionController.text : widget.user.address3;
+    userModified.address3 = widget.option == 3
+        ? _direccionController.text
+        : widget.cliente.address3;
     userModified.latitude3 =
-        widget.option == 3 ? latitud : widget.user.latitude3;
+        widget.option == 3 ? latitud : widget.cliente.latitude3;
     userModified.longitude3 =
-        widget.option == 3 ? longitud : widget.user.longitude3;
+        widget.option == 3 ? longitud : widget.cliente.longitude3;
 
-    userModified.street3 = widget.option == 3 ? street : widget.user.street3;
+    userModified.street3 = widget.option == 3 ? street : widget.cliente.street3;
     userModified.administrativeArea3 = widget.option == 3
         ? administrativeArea
-        : widget.user.administrativeArea3;
-    userModified.country3 = widget.option == 3 ? country : widget.user.country3;
+        : widget.cliente.administrativeArea3;
+    userModified.country3 =
+        widget.option == 3 ? country : widget.cliente.country3;
     userModified.isoCountryCode3 =
-        widget.option == 3 ? isoCountryCode : widget.user.isoCountryCode3;
+        widget.option == 3 ? isoCountryCode : widget.cliente.isoCountryCode3;
     userModified.locality3 =
-        widget.option == 3 ? locality : widget.user.locality3;
+        widget.option == 3 ? locality : widget.cliente.locality3;
     userModified.subAdministrativeArea3 = widget.option == 3
         ? subAdministrativeArea
-        : widget.user.subAdministrativeArea3;
+        : widget.cliente.subAdministrativeArea3;
     userModified.subLocality3 =
-        widget.option == 3 ? subLocality : widget.user.subLocality3;
+        widget.option == 3 ? subLocality : widget.cliente.subLocality3;
 
     // var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -345,7 +348,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
     // }
 
     // Response response = await ApiHelper.put(
-    //     '/api/Users/', widget.user.id, request, widget.token);
+    //     '/api/Users/', widget.cliente.id, request, widget.token);
 
     // setState(() {
     //   _showLoader = false;

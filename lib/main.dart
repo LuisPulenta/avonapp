@@ -1,8 +1,7 @@
 import 'dart:convert';
-
+import 'package:avon_app/models/cliente.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:avon_app/models/token.dart';
 import 'package:avon_app/screens/home_screen.dart';
 import 'package:avon_app/screens/login_screen.dart';
 import 'package:avon_app/screens/wait_screen.dart';
@@ -19,7 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isLoading = true;
   bool _showLoginPage = true;
-  late Token _token;
+  late Cliente _cliente;
 
   @override
   void initState() {
@@ -31,12 +30,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Natura App',
+      title: 'Avon App',
       home: _isLoading
           ? const WaitScreen()
           : _showLoginPage
               ? const LoginScreen()
-              : HomeScreen(token: _token),
+              : HomeScreen(cliente: _cliente),
     );
   }
 
@@ -47,10 +46,8 @@ class _MyAppState extends State<MyApp> {
       String? userBody = prefs.getString('userBody');
       if (userBody != null) {
         var decodedJson = jsonDecode(userBody);
-        _token = Token.fromJson(decodedJson);
-        if (DateTime.parse(_token.expiration).isAfter(DateTime.now())) {
-          _showLoginPage = false;
-        }
+        _cliente = Cliente.fromJson(decodedJson);
+        _showLoginPage = false;
       }
     }
     _isLoading = false;

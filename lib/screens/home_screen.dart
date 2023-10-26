@@ -1,34 +1,35 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:avon_app/models/cliente.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avon_app/helpers/api_helper.dart';
 import 'package:avon_app/models/response.dart';
-import 'package:avon_app/models/token.dart';
-import 'package:avon_app/models/user.dart';
 import 'package:avon_app/screens/login_screen.dart';
-import 'package:avon_app/screens/user_screen.dart';
+import 'package:avon_app/screens/cliente_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  final Token token;
-
-  const HomeScreen({Key? key, required this.token}) : super(key: key);
+  final Cliente cliente;
+  const HomeScreen({Key? key, required this.cliente}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+//----------------- Variables --------------------
 class _HomeScreenState extends State<HomeScreen> {
-  late User _user;
+  late Cliente _cliente;
 
+//----------------- initState --------------------
   @override
   void initState() {
     super.initState();
-    _user = widget.token.user;
-    _getUser();
+    _cliente = widget.cliente;
+    //_getUser();
   }
 
+//----------------- Pantalla --------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+//----------------- _getBody --------------------
   Widget _getBody() {
     return SingleChildScrollView(
       child: Container(
@@ -108,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: CachedNetworkImage(
-                  imageUrl: _user.imageFullPath,
+                  imageUrl: _cliente.imageFullPath,
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                   fit: BoxFit.cover,
                   height: 200,
@@ -125,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Center(
               child: Text(
-                'Bienvenido/a ${_user.fullName}',
+                'Bienvenido/a ${_cliente.fullName}',
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -139,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+//----------------- _logOut --------------------
   void _logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isRemembered', false);
@@ -147,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
+//----------------- _getUser --------------------
   Future<void> _getUser() async {
     setState(() {});
 
@@ -164,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    Response response = await ApiHelper.getUser(widget.token, _user.id);
+    Response response = await ApiHelper.getUser(_cliente.id);
 
     setState(() {});
 
@@ -179,17 +183,17 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     setState(() {
-      _user = response.result;
+      _cliente = response.result;
     });
   }
 
+//----------------- _editUser --------------------
   _editUser() async {
     String? result = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => UserScreen(
-                  token: widget.token,
-                  user: _user,
+            builder: (context) => ClienteScreen(
+                  cliente: _cliente,
                   myProfile: true,
                 )));
     if (result == 'yes') {

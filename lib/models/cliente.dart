@@ -1,5 +1,7 @@
-class User {
+class Cliente {
   String modulo = '';
+  String avonAccount = '';
+  String password = '';
   String firstName = '';
   String lastName = '';
   String document = '';
@@ -38,12 +40,12 @@ class User {
   int userType = 0;
   String fullName = '';
   String id = '';
-  String userName = '';
-  String email = '';
   String phoneNumber = '';
 
-  User({
+  Cliente({
     required this.modulo,
+    required this.avonAccount,
+    required this.password,
     required this.firstName,
     required this.lastName,
     required this.document,
@@ -82,65 +84,65 @@ class User {
     required this.userType,
     required this.fullName,
     required this.id,
-    required this.userName,
-    required this.email,
     required this.phoneNumber,
   });
 
-  User.fromJson(Map<String, dynamic> json) {
+  Cliente.fromJson(Map<String, dynamic> json) {
     modulo = json['modulo'];
+    avonAccount = json['avonAccount'];
+    password = json['password'];
     firstName = json['firstName'];
-    lastName = json['lastName'];
-    document = json['document'];
-    address1 = json['address1'];
-    latitude1 = json['latitude1'] + .0;
-    longitude1 = json['longitude1'] + .0;
+    lastName = json['lastName'] ?? '';
+    document = json['document'] ?? '';
+    address1 = json['address1'] ?? '';
+    latitude1 = json['latitude1'] + 0.0 ?? 0.0;
+    longitude1 = json['longitude1'] + 0.0 ?? 0.0;
 
-    street1 = json['street1'];
-    administrativeArea1 = json['administrativeArea1'];
-    country1 = json['country1'];
-    isoCountryCode1 = json['isoCountryCode1'];
-    locality1 = json['locality1'];
-    subAdministrativeArea1 = json['subAdministrativeArea1'];
-    subLocality1 = json['subLocality1'];
+    street1 = json['street1'] ?? '';
+    administrativeArea1 = json['administrativeArea1'] ?? '';
+    country1 = json['country1'] ?? '';
+    isoCountryCode1 = json['isoCountryCode1'] ?? '';
+    locality1 = json['locality1'] ?? '';
+    subAdministrativeArea1 = json['subAdministrativeArea1'] ?? '';
+    subLocality1 = json['subLocality1'] ?? '';
 
-    address2 = json['address2'];
-    latitude2 = json['latitude2'] + .0;
-    longitude2 = json['longitude2'] + .0;
+    address2 = json['address2'] ?? '';
+    latitude2 = json['latitude2'] + 0.0 ?? 0.0;
+    longitude2 = json['longitude2'] + 0.0 ?? 0.0;
 
-    street2 = json['street2'];
-    administrativeArea2 = json['administrativeArea2'];
-    country2 = json['country2'];
-    isoCountryCode2 = json['isoCountryCode2'];
-    locality2 = json['locality2'];
-    subAdministrativeArea2 = json['subAdministrativeArea2'];
-    subLocality2 = json['subLocality2'];
+    street2 = json['street2'] ?? '';
+    administrativeArea2 = json['administrativeArea2'] ?? '';
+    country2 = json['country2'] ?? '';
+    isoCountryCode2 = json['isoCountryCode2'] ?? '';
+    locality2 = json['locality2'] ?? '';
+    subAdministrativeArea2 = json['subAdministrativeArea2'] ?? '';
+    subLocality2 = json['subLocality2'] ?? '';
 
-    address3 = json['address3'];
-    latitude3 = json['latitude3'] + .0;
-    longitude3 = json['longitude3'] + .0;
+    address3 = json['address3'] ?? '';
+    latitude3 = json['latitude3'] + 0.0 ?? 0.0;
+    longitude3 = json['longitude3'] + 0.0 ?? 0.0;
 
-    street3 = json['street3'];
-    administrativeArea3 = json['administrativeArea3'];
-    country3 = json['country3'];
-    isoCountryCode3 = json['isoCountryCode3'];
-    locality3 = json['locality3'];
-    subAdministrativeArea3 = json['subAdministrativeArea3'];
-    subLocality3 = json['subLocality3'];
+    street3 = json['street3'] ?? '';
+    administrativeArea3 = json['administrativeArea3'] ?? '';
+    country3 = json['country3'] ?? '';
+    isoCountryCode3 = json['isoCountryCode3'] ?? '';
+    locality3 = json['locality3'] ?? '';
+    subAdministrativeArea3 = json['subAdministrativeArea3'] ?? '';
+    subLocality3 = json['subLocality3'] ?? '';
 
-    imageId = json['imageId'];
-    imageFullPath = json['imageFullPath'];
+    imageId = json['imageId'] ?? '';
+    imageFullPath = json['imageFullPath'] ?? '';
     userType = json['userType'];
-    fullName = json['fullName'];
-    id = json['id'];
-    userName = json['userName'];
-    email = json['email'];
-    phoneNumber = json['phoneNumber'];
+    fullName = json['fullName'] ?? '';
+    id = json['id'].toString();
+    phoneNumber = json['phoneNumber'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['modulo'] = modulo;
+    data['avonAccount'] = avonAccount;
+    data['password'] = password;
     data['firstName'] = firstName;
     data['lastName'] = lastName;
     data['document'] = document;
@@ -185,8 +187,6 @@ class User {
     data['userType'] = userType;
     data['fullName'] = fullName;
     data['id'] = id;
-    data['userName'] = userName;
-    data['email'] = email;
     data['phoneNumber'] = phoneNumber;
     return data;
   }

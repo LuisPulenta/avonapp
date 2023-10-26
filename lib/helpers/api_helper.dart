@@ -1,27 +1,18 @@
 import 'dart:convert';
+import 'package:avon_app/models/cliente.dart';
 import 'package:http/http.dart' as http;
 import 'package:avon_app/models/response.dart';
-import 'package:avon_app/models/token.dart';
-import 'package:avon_app/models/user.dart';
-
 import 'constants.dart';
 
 class ApiHelper {
-  static Future<Response> put(String controller, String id,
-      Map<String, dynamic> request, Token token) async {
-    if (!_validateToken(token)) {
-      return Response(
-          isSuccess: false,
-          message:
-              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
-    }
+  static Future<Response> put(
+      String controller, String id, Map<String, dynamic> request) async {
     var url = Uri.parse('${Constants.apiUrl}$controller$id');
     var response = await http.put(
       url,
       headers: {
         'content-type': 'application/json',
         'accept': 'application/json',
-        'authorization': 'bearer ${token.token}',
       },
       body: jsonEncode(request),
     );
@@ -53,20 +44,13 @@ class ApiHelper {
   }
 
   static Future<Response> post(
-      String controller, Map<String, dynamic> request, Token token) async {
-    if (!_validateToken(token)) {
-      return Response(
-          isSuccess: false,
-          message:
-              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
-    }
+      String controller, Map<String, dynamic> request) async {
     var url = Uri.parse('${Constants.apiUrl}$controller');
     var response = await http.post(
       url,
       headers: {
         'content-type': 'application/json',
         'accept': 'application/json',
-        'authorization': 'bearer ${token.token}',
       },
       body: jsonEncode(request),
     );
@@ -78,21 +62,13 @@ class ApiHelper {
     return Response(isSuccess: true);
   }
 
-  static Future<Response> delete(
-      String controller, String id, Token token) async {
-    if (!_validateToken(token)) {
-      return Response(
-          isSuccess: false,
-          message:
-              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
-    }
+  static Future<Response> delete(String controller, String id) async {
     var url = Uri.parse('${Constants.apiUrl}$controller$id');
     var response = await http.delete(
       url,
       headers: {
         'content-type': 'application/json',
         'accept': 'application/json',
-        'authorization': 'bearer ${token.token}',
       },
     );
 
@@ -103,20 +79,13 @@ class ApiHelper {
     return Response(isSuccess: true);
   }
 
-  static Future<Response> getUser(Token token, String id) async {
-    if (!_validateToken(token)) {
-      return Response(
-          isSuccess: false,
-          message:
-              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
-    }
+  static Future<Response> getUser(String id) async {
     var url = Uri.parse('${Constants.apiUrl}/api/Users/$id');
     var response = await http.get(
       url,
       headers: {
         'content-type': 'application/json',
         'accept': 'application/json',
-        'authorization': 'bearer ${token.token}',
       },
     );
     var body = response.body;
@@ -126,13 +95,6 @@ class ApiHelper {
     }
 
     var decodedJson = jsonDecode(body);
-    return Response(isSuccess: true, result: User.fromJson(decodedJson));
-  }
-
-  static bool _validateToken(Token token) {
-    if (DateTime.parse(token.expiration).isAfter(DateTime.now())) {
-      return true;
-    }
-    return false;
+    return Response(isSuccess: true, result: Cliente.fromJson(decodedJson));
   }
 }

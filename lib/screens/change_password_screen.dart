@@ -1,14 +1,15 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:avon_app/models/cliente.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:avon_app/components/loader_component.dart';
 import 'package:avon_app/helpers/api_helper.dart';
 import 'package:avon_app/models/response.dart';
-import 'package:avon_app/models/token.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  final Token token;
-  const ChangePasswordScreen({Key? key, required this.token}) : super(key: key);
+  final Cliente cliente;
+  const ChangePasswordScreen({Key? key, required this.cliente})
+      : super(key: key);
 
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
@@ -199,6 +200,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       _currentPasswordShowError = false;
     }
 
+    if (_currentPassword != widget.cliente.password) {
+      isValid = false;
+      _currentPasswordShowError = true;
+      _currentPasswordError = 'Contraseña incorrecta';
+    } else {
+      _currentPasswordShowError = false;
+    }
+
     if (_newPassword.length < 6) {
       isValid = false;
       _newPasswordShowError = true;
@@ -254,13 +263,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
 
     Map<String, dynamic> request = {
+      'id': widget.cliente.id,
       'oldPassword': _currentPassword,
       'newPassword': _newPassword,
       'confirm': _confirmPassword,
     };
 
-    Response response = await ApiHelper.post(
-        '/api/Account/ChangePassword', request, widget.token);
+    Response response =
+        await ApiHelper.post('/api/Account/ChangePassword', request);
 
     setState(() {
       _showLoader = false;

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:avon_app/models/cliente.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -11,36 +12,31 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:avon_app/components/loader_component.dart';
 import 'package:avon_app/helpers/api_helper.dart';
-import 'package:avon_app/models/user.dart';
 import 'package:avon_app/models/response.dart';
-import 'package:avon_app/models/token.dart';
 import 'package:avon_app/screens/change_password_screen.dart';
 import 'package:avon_app/screens/direccion_screen.dart';
 import 'package:avon_app/screens/take_picture_screen.dart';
 
-class UserScreen extends StatefulWidget {
-  final Token token;
-  final User user;
+class ClienteScreen extends StatefulWidget {
+  final Cliente cliente;
   final bool myProfile;
 
-  const UserScreen(
-      {Key? key,
-      required this.token,
-      required this.user,
-      required this.myProfile})
+  const ClienteScreen(
+      {Key? key, required this.cliente, required this.myProfile})
       : super(key: key);
 
   @override
-  _UserScreenState createState() => _UserScreenState();
+  _ClienteScreenState createState() => _ClienteScreenState();
 }
 
-class _UserScreenState extends State<UserScreen> {
+//----------------------- Variables --------------------------
+class _ClienteScreenState extends State<ClienteScreen> {
   bool _showLoader = false;
   bool _photoChanged = false;
   bool _habilitaPosicion = false;
   int _option = 0;
   late XFile _image;
-  late User _user;
+  late Cliente _cliente;
 
   String _firstName = '';
   String _firstNameError = '';
@@ -72,10 +68,7 @@ class _UserScreenState extends State<UserScreen> {
   final bool _address3ShowError = false;
   final TextEditingController _address3Controller = TextEditingController();
 
-  String _email = '';
-  final String _emailError = '';
-  final bool _emailShowError = false;
-  final TextEditingController _emailController = TextEditingController();
+  final String _email = '';
 
   String _phoneNumber = '';
   String _phoneNumberError = '';
@@ -95,19 +88,22 @@ class _UserScreenState extends State<UserScreen> {
       altitudeAccuracy: 0,
       headingAccuracy: 0);
 
+//----------------------- initState --------------------------
   @override
   void initState() {
     super.initState();
-    _user = widget.user;
+    _cliente = widget.cliente;
     _loadFieldValues();
   }
 
+//----------------------- Pantalla --------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(0xFFFFFFCC),
         appBar: AppBar(
-          title: Text(_user.id.isEmpty ? 'Nuevo Usuario' : _user.fullName),
+          title:
+              Text(_cliente.id.isEmpty ? 'Nuevo Usuario' : _cliente.fullName),
         ),
         body: Stack(
           children: [
@@ -124,7 +120,7 @@ class _UserScreenState extends State<UserScreen> {
                   _showAddress1(),
                   _showAddress2(),
                   _showAddress3(),
-                  _showEmail(),
+                  //_showEmail(),
                   _showPhoneNumber(),
                   _showButtons(),
                   const SizedBox(
@@ -142,11 +138,12 @@ class _UserScreenState extends State<UserScreen> {
         ));
   }
 
+//----------------------- _showPhoto --------------------------
   Widget _showPhoto() {
     return Stack(children: <Widget>[
       Container(
         margin: const EdgeInsets.only(top: 10),
-        child: _user.id.isEmpty && !_photoChanged
+        child: _cliente.id.isEmpty && !_photoChanged
             ? const Image(
                 image: AssetImage('assets/nouser.png'),
                 width: 160,
@@ -158,7 +155,7 @@ class _UserScreenState extends State<UserScreen> {
                     ? Image.file(File(_image.path),
                         width: 160, height: 160, fit: BoxFit.cover)
                     : CachedNetworkImage(
-                        imageUrl: _user.imageFullPath,
+                        imageUrl: _cliente.imageFullPath,
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
                         fit: BoxFit.cover,
@@ -214,6 +211,7 @@ class _UserScreenState extends State<UserScreen> {
     ]);
   }
 
+//----------------------- _showFirstName --------------------------
   Widget _showFirstName() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -235,6 +233,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+//----------------------- _showLastName --------------------------
   Widget _showLastName() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -256,6 +255,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+//----------------------- _showDocument --------------------------
   Widget _showDocument() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -279,6 +279,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+//----------------------- _showAddress1 --------------------------
   Widget _showAddress1() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -320,6 +321,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+//----------------------- _showAddress2 --------------------------
   Widget _showAddress2() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -361,6 +363,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+//----------------------- _showAddress3 --------------------------
   Widget _showAddress3() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -402,30 +405,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  Widget _showEmail() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: TextField(
-        enabled: _user.id.isEmpty,
-        controller: _emailController,
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-            fillColor: Colors.white,
-            filled: true,
-            enabled: false,
-            hintText: 'Ingresa Email...',
-            labelText: 'Email',
-            errorText: _emailShowError ? _emailError : null,
-            suffixIcon: const Icon(Icons.email),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-        onChanged: (value) {
-          _email = value;
-        },
-      ),
-    );
-  }
-
+//----------------------- _showPhoneNumber --------------------------
   Widget _showPhoneNumber() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -448,6 +428,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+//----------------------- _showButtons --------------------------
   Widget _showButtons() {
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),
@@ -476,12 +457,12 @@ class _UserScreenState extends State<UserScreen> {
               onPressed: () => _save(),
             ),
           ),
-          _user.id.isEmpty
+          _cliente.id.isEmpty
               ? Container()
               : const SizedBox(
                   width: 20,
                 ),
-          _user.id.isEmpty
+          _cliente.id.isEmpty
               ? Container()
               : widget.myProfile
                   ? Expanded(
@@ -533,13 +514,15 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+//----------------------- _save --------------------------
   void _save() {
     if (!validateFields()) {
       return;
     }
-    _user.id.isEmpty ? _addRecord() : _saveRecord();
+    _cliente.id.isEmpty ? _addRecord() : _saveRecord();
   }
 
+//----------------------- validateFields --------------------------
   bool validateFields() {
     bool isValid = true;
 
@@ -572,6 +555,7 @@ class _UserScreenState extends State<UserScreen> {
     return isValid;
   }
 
+//----------------------- _addRecord --------------------------
   _addRecord() async {
     setState(() {
       _showLoader = true;
@@ -596,8 +580,7 @@ class _UserScreenState extends State<UserScreen> {
       'image': base64image,
     };
 
-    Response response =
-        await ApiHelper.post('/api/Users/', request, widget.token);
+    Response response = await ApiHelper.post('/api/Users/', request);
 
     setState(() {
       _showLoader = false;
@@ -616,6 +599,7 @@ class _UserScreenState extends State<UserScreen> {
     Navigator.pop(context, 'yes');
   }
 
+//----------------------- _saveRecord --------------------------
   _saveRecord() async {
     setState(() {
       _showLoader = true;
@@ -628,45 +612,46 @@ class _UserScreenState extends State<UserScreen> {
     }
 
     Map<String, dynamic> request = {
-      'id': widget.user.id,
-      'modulo': _user.modulo,
+      'id': widget.cliente.id,
+      'modulo': _cliente.modulo,
+      'avonAccount': _cliente.avonAccount,
       'firstName': _firstName,
       'lastName': _lastName,
       'document': _document,
-      'address1': _user.address1,
-      'latitude1': _user.latitude1,
-      'longitude1': _user.longitude1,
-      'address2': _user.address2,
-      'latitude2': _user.latitude2,
-      'longitude2': _user.longitude2,
-      'address3': _user.address3,
-      'latitude3': _user.latitude3,
-      'longitude3': _user.longitude3,
+      'address1': _cliente.address1,
+      'latitude1': _cliente.latitude1,
+      'longitude1': _cliente.longitude1,
+      'address2': _cliente.address2,
+      'latitude2': _cliente.latitude2,
+      'longitude2': _cliente.longitude2,
+      'address3': _cliente.address3,
+      'latitude3': _cliente.latitude3,
+      'longitude3': _cliente.longitude3,
       'email': _email,
       'userName': _email,
       'phoneNumber': _phoneNumber,
       'image': base64image,
-      'street1': _user.street1,
-      'administrativeArea1': _user.administrativeArea1,
-      'country1': _user.country1,
-      'isoCountryCode1': _user.isoCountryCode1,
-      'locality1': _user.locality1,
-      'subAdministrativeArea1': _user.subAdministrativeArea1,
-      'subLocality1': _user.subLocality1,
-      'street2': _user.street2,
-      'administrativeArea2': _user.administrativeArea2,
-      'country2': _user.country2,
-      'isoCountryCode2': _user.isoCountryCode2,
-      'locality2': _user.locality2,
-      'subAdministrativeArea2': _user.subAdministrativeArea2,
-      'subLocality2': _user.subLocality2,
-      'street3': _user.street3,
-      'administrativeArea3': _user.administrativeArea3,
-      'country3': _user.country3,
-      'isoCountryCode3': _user.isoCountryCode3,
-      'locality3': _user.locality3,
-      'subAdministrativeArea3': _user.subAdministrativeArea3,
-      'subLocality3': _user.subLocality3,
+      'street1': _cliente.street1,
+      'administrativeArea1': _cliente.administrativeArea1,
+      'country1': _cliente.country1,
+      'isoCountryCode1': _cliente.isoCountryCode1,
+      'locality1': _cliente.locality1,
+      'subAdministrativeArea1': _cliente.subAdministrativeArea1,
+      'subLocality1': _cliente.subLocality1,
+      'street2': _cliente.street2,
+      'administrativeArea2': _cliente.administrativeArea2,
+      'country2': _cliente.country2,
+      'isoCountryCode2': _cliente.isoCountryCode2,
+      'locality2': _cliente.locality2,
+      'subAdministrativeArea2': _cliente.subAdministrativeArea2,
+      'subLocality2': _cliente.subLocality2,
+      'street3': _cliente.street3,
+      'administrativeArea3': _cliente.administrativeArea3,
+      'country3': _cliente.country3,
+      'isoCountryCode3': _cliente.isoCountryCode3,
+      'locality3': _cliente.locality3,
+      'subAdministrativeArea3': _cliente.subAdministrativeArea3,
+      'subLocality3': _cliente.subLocality3,
     };
 
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -686,7 +671,7 @@ class _UserScreenState extends State<UserScreen> {
     }
 
     Response response =
-        await ApiHelper.put('/api/Users/', _user.id, request, widget.token);
+        await ApiHelper.put('/api/Users/', _cliente.id, request);
 
     setState(() {
       _showLoader = false;
@@ -705,6 +690,7 @@ class _UserScreenState extends State<UserScreen> {
     Navigator.pop(context, 'yes');
   }
 
+//----------------------- _confirmDelete --------------------------
   void _confirmDelete() async {
     var response = await showAlertDialog(
         context: context,
@@ -719,6 +705,7 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
+//----------------------- _deleteRecord --------------------------
   void _deleteRecord() async {
     setState(() {
       _showLoader = true;
@@ -740,8 +727,7 @@ class _UserScreenState extends State<UserScreen> {
       return;
     }
 
-    Response response =
-        await ApiHelper.delete('/api/Users/', _user.id, widget.token);
+    Response response = await ApiHelper.delete('/api/Users/', _cliente.id);
 
     setState(() {
       _showLoader = false;
@@ -761,6 +747,7 @@ class _UserScreenState extends State<UserScreen> {
     Navigator.pop(context, 'yes');
   }
 
+//----------------------- _takePicture --------------------------
   void _takePicture() async {
     WidgetsFlutterBinding.ensureInitialized();
     final cameras = await availableCameras();
@@ -797,6 +784,7 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
+//----------------------- _selectPicture --------------------------
   void _selectPicture() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -808,88 +796,87 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
+//----------------------- _loadFieldValues --------------------------
   void _loadFieldValues() {
-    _firstName = _user.firstName;
+    _firstName = _cliente.firstName;
     _firstNameController.text = _firstName;
 
-    _lastName = _user.lastName;
+    _lastName = _cliente.lastName;
     _lastNameController.text = _lastName;
 
-    _document = _user.document;
+    _document = _cliente.document;
     _documentController.text = _document;
 
-    _address1 = _user.address1;
-    _address2 = _user.address2;
-    _address3 = _user.address3;
+    _address1 = _cliente.address1;
+    _address2 = _cliente.address2;
+    _address3 = _cliente.address3;
     _address1Controller.text = _address1.toString();
     _address2Controller.text = _address2.toString();
     _address3Controller.text = _address3.toString();
 
-    _email = _user.email;
-    _emailController.text = _email;
-
-    _phoneNumber = _user.phoneNumber;
+    _phoneNumber = _cliente.phoneNumber;
     _phoneNumberController.text = _phoneNumber;
   }
 
+//----------------------- _changePassword --------------------------
   void _changePassword() {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => ChangePasswordScreen(
-                  token: widget.token,
+                  cliente: widget.cliente,
                 )));
   }
 
+//----------------------- _address --------------------------
   void _address() async {
     await _getPosition();
 
     if (_habilitaPosicion) {
-      User? userModified = await Navigator.push(
+      Cliente? userModified = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => DireccionScreen(
-                  token: widget.token,
-                  user: _user,
+                  cliente: _cliente,
                   option: _option,
                   positionUser: _positionUser,
                   direccionUser: _direccion)));
 
       if (userModified != null) {
         setState(() {
-          _user.address1 = userModified.address1;
-          _user.address2 = userModified.address2;
-          _user.address3 = userModified.address3;
-          _user.latitude1 = userModified.latitude1;
-          _user.longitude1 = userModified.longitude1;
-          _user.latitude2 = userModified.latitude2;
-          _user.longitude2 = userModified.longitude2;
-          _user.latitude3 = userModified.latitude3;
-          _user.longitude3 = userModified.longitude3;
-          _user.street1 = userModified.street1;
-          _user.street2 = userModified.street2;
-          _user.street3 = userModified.street3;
-          _user.country1 = userModified.country1;
-          _user.country2 = userModified.country2;
-          _user.country3 = userModified.country3;
-          _user.isoCountryCode1 = userModified.isoCountryCode1;
-          _user.isoCountryCode2 = userModified.isoCountryCode2;
-          _user.isoCountryCode3 = userModified.isoCountryCode3;
-          _user.administrativeArea1 = userModified.administrativeArea1;
-          _user.administrativeArea2 = userModified.administrativeArea2;
-          _user.administrativeArea3 = userModified.administrativeArea3;
-          _user.locality1 = userModified.locality1;
-          _user.locality2 = userModified.locality2;
-          _user.locality3 = userModified.locality3;
-          _user.subAdministrativeArea1 = userModified.subAdministrativeArea1;
-          _user.subAdministrativeArea2 = userModified.subAdministrativeArea2;
-          _user.subAdministrativeArea3 = userModified.subAdministrativeArea3;
-          _user.subLocality1 = userModified.subLocality1;
-          _user.subLocality2 = userModified.subLocality2;
-          _user.subLocality3 = userModified.subLocality3;
-          _address1 = _user.address1;
-          _address2 = _user.address2;
-          _address3 = _user.address3;
+          _cliente.address1 = userModified.address1;
+          _cliente.address2 = userModified.address2;
+          _cliente.address3 = userModified.address3;
+          _cliente.latitude1 = userModified.latitude1;
+          _cliente.longitude1 = userModified.longitude1;
+          _cliente.latitude2 = userModified.latitude2;
+          _cliente.longitude2 = userModified.longitude2;
+          _cliente.latitude3 = userModified.latitude3;
+          _cliente.longitude3 = userModified.longitude3;
+          _cliente.street1 = userModified.street1;
+          _cliente.street2 = userModified.street2;
+          _cliente.street3 = userModified.street3;
+          _cliente.country1 = userModified.country1;
+          _cliente.country2 = userModified.country2;
+          _cliente.country3 = userModified.country3;
+          _cliente.isoCountryCode1 = userModified.isoCountryCode1;
+          _cliente.isoCountryCode2 = userModified.isoCountryCode2;
+          _cliente.isoCountryCode3 = userModified.isoCountryCode3;
+          _cliente.administrativeArea1 = userModified.administrativeArea1;
+          _cliente.administrativeArea2 = userModified.administrativeArea2;
+          _cliente.administrativeArea3 = userModified.administrativeArea3;
+          _cliente.locality1 = userModified.locality1;
+          _cliente.locality2 = userModified.locality2;
+          _cliente.locality3 = userModified.locality3;
+          _cliente.subAdministrativeArea1 = userModified.subAdministrativeArea1;
+          _cliente.subAdministrativeArea2 = userModified.subAdministrativeArea2;
+          _cliente.subAdministrativeArea3 = userModified.subAdministrativeArea3;
+          _cliente.subLocality1 = userModified.subLocality1;
+          _cliente.subLocality2 = userModified.subLocality2;
+          _cliente.subLocality3 = userModified.subLocality3;
+          _address1 = _cliente.address1;
+          _address2 = _cliente.address2;
+          _address3 = _cliente.address3;
           _address1Controller.text = _address1!;
           _address2Controller.text = _address2!;
           _address3Controller.text = _address3!;
@@ -898,6 +885,7 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
+//----------------------- _getPosition --------------------------
   Future _getPosition() async {
     LocationPermission permission;
     // serviceEnabled = await Geolocator.isLocationServiceEnabled();

@@ -1,16 +1,12 @@
 import 'dart:convert';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:avon_app/models/user2.dart';
+import 'package:avon_app/models/cliente.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:avon_app/helpers/constants.dart';
 import 'package:avon_app/components/loader_component.dart';
-import 'package:avon_app/models/token.dart';
 import 'package:avon_app/screens/home_screen.dart';
-import 'package:avon_app/screens/recover_password_screen.dart';
-import 'package:avon_app/screens/register_user_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,12 +16,16 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
+//----------------------- Variables --------------------------
 class _LoginScreenState extends State<LoginScreen> {
   String _email = '';
+  String _password = '';
+  // String _email = '12345678';
+  // String _password = '123456';
+
   String _emailError = '';
   bool _emailShowError = false;
 
-  String _password = '';
   String _passwordError = '';
   bool _passwordShowError = false;
 
@@ -35,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _showLoader = false;
 
+//----------------------- Pantalla --------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 10,
                         ),
                         _showRememberme(),
-                        _showForgotPassword(),
                         _showButtons(),
                       ],
                     ),
@@ -126,6 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//----------------------- _showEmail --------------------------
   Widget _showEmail() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -134,8 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: InputDecoration(
             fillColor: Colors.white,
             filled: true,
-            hintText: 'Usuario...',
-            labelText: 'Usuario',
+            hintText: 'Cuenta...',
+            labelText: 'Cuenta',
             errorText: _emailShowError ? _emailError : null,
             prefixIcon: const Icon(Icons.person),
             border:
@@ -147,6 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//----------------------- _showPassword --------------------------
   Widget _showPassword() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -178,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//----------------------- _showRememberme --------------------------
   _showRememberme() {
     return CheckboxListTile(
       title: const Text('Recordarme:'),
@@ -190,24 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _showForgotPassword() {
-    return InkWell(
-      onTap: () => _goForgotPassword(),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
-        child: const Text(
-          '¿Has olvidado tu contraseña?',
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
-    );
-  }
-
-  void _goForgotPassword() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const RecoverPasswordScreen()));
-  }
-
+//----------------------- _showButtons --------------------------
   Widget _showButtons() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20),
@@ -239,33 +225,49 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(
             width: 15,
           ),
-          Expanded(
-            child: ElevatedButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.person_add),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text('Registrarse'),
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFc41c9c),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-              onPressed: () => _register(),
-            ),
-          ),
         ],
       ),
     );
   }
 
+//----------------------- _storeUser --------------------------
+  void _storeUser(String body) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isRemembered', true);
+    await prefs.setString('userBody', body);
+    await prefs.setString('date', DateTime.now().toString());
+  }
+
+//----------------------- validateFields --------------------------
+  bool validateFields() {
+    bool isValid = true;
+
+    if (_email.isEmpty) {
+      isValid = false;
+      _emailShowError = true;
+      _emailError = 'Debes ingresar tu Cuenta';
+    } else {
+      _emailShowError = false;
+    }
+
+    if (_password.isEmpty) {
+      isValid = false;
+      _passwordShowError = true;
+      _passwordError = 'Debes ingresar tu Contraseña';
+    } else if (_password.length < 6) {
+      isValid = false;
+      _passwordShowError = true;
+      _passwordError = 'La Contraseña debe tener al menos 6 caracteres';
+    } else {
+      _passwordShowError = false;
+    }
+
+    setState(() {});
+
+    return isValid;
+  }
+
+//--------------------- _login -----------------------------
   void _login() async {
     setState(() {
       _passwordShow = false;
@@ -295,11 +297,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    Map<String, dynamic> request = {
-      'userName': _email,
-      'password': _password,
-    };
-
     Map<String, dynamic> request2 = {
       'email': _email,
     };
@@ -317,122 +314,44 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response2.statusCode >= 400) {
       setState(() {
         _passwordShowError = true;
-        _passwordError = 'Email o contraseña incorrectos';
+        _passwordError = 'Cuenta o contraseña incorrectos';
       });
-
-      setState(() {
-        _showLoader = false;
-      });
-
-      return;
     }
-
-    var body2 = response2.body;
-    var decodedJson2 = jsonDecode(body2);
-    var user2 = User2.fromJson(decodedJson2);
-
-    if (!user2.emailConfirmed) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              'Esta cuenta no ha sido confirmada. Por favor verifique su Email para confirmar la cuenta e intente nuevamente.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      setState(() {
-        _showLoader = false;
-      });
-      return;
-    }
-
-    var url = Uri.parse('${Constants.apiUrl}/api/Account/CreateToken');
-    var response = await http.post(
-      url,
-      headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-      },
-      body: jsonEncode(request),
-    );
 
     setState(() {
       _showLoader = false;
     });
 
-    if (response.statusCode >= 400) {
+    var body2 = response2.body;
+    var decodedJson2 = jsonDecode(body2);
+    var cliente = Cliente.fromJson(decodedJson2);
+
+    if (cliente.password.toLowerCase() != _password.toLowerCase()) {
       setState(() {
-        _emailShowError = true;
-        _emailError = 'Email o Contraseña no válidos';
         _passwordShowError = true;
-        _passwordError = 'Email o Contraseña no válidos';
+        _passwordError = 'Contraseña incorrecta';
       });
+
+      setState(() {
+        _showLoader = false;
+      });
+
       return;
     }
 
-    var body = response.body;
-    var decodedJson = jsonDecode(body);
-    var token = Token.fromJson(decodedJson);
-
-    if (token.user.modulo != Constants.modulo) {
-      setState(() {
-        _emailShowError = true;
-        _emailError = 'Email o Contraseña no válidos';
-        _passwordShowError = true;
-        _passwordError = 'Email o Contraseña no válidos';
-      });
-      return;
-    }
+    setState(() {
+      _showLoader = false;
+    });
 
     if (_rememberme) {
-      _storeUser(body);
+      _storeUser(body2);
     }
 
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => HomeScreen(
-                  token: token,
+                  cliente: cliente,
                 )));
-  }
-
-  bool validateFields() {
-    bool isValid = true;
-
-    if (_email.isEmpty) {
-      isValid = false;
-      _emailShowError = true;
-      _emailError = 'Debes ingresar tu Email';
-    } else {
-      _emailShowError = false;
-    }
-
-    if (_password.isEmpty) {
-      isValid = false;
-      _passwordShowError = true;
-      _passwordError = 'Debes ingresar tu Contraseña';
-    } else if (_password.length < 6) {
-      isValid = false;
-      _passwordShowError = true;
-      _passwordError = 'La Contraseña debe tener al menos 6 caracteres';
-    } else {
-      _passwordShowError = false;
-    }
-
-    setState(() {});
-
-    return isValid;
-  }
-
-  void _storeUser(String body) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isRemembered', true);
-    await prefs.setString('userBody', body);
-    await prefs.setString('date', DateTime.now().toString());
-  }
-
-  void _register() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const RegisterUserScreen()));
   }
 }
