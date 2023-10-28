@@ -54,8 +54,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
   final TextEditingController _documentController = TextEditingController();
 
   String? _address1 = '';
-  final String _address1Error = '';
-  final bool _address1ShowError = false;
+  String _address1Error = '';
+  bool _address1ShowError = false;
   final TextEditingController _address1Controller = TextEditingController();
 
   String? _address2 = '';
@@ -116,7 +116,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                   _showPhoto(),
                   _showFirstName(),
                   _showLastName(),
-                  _showDocument(),
+                  _showAvonCount(),
                   _showAddress1(),
                   _showAddress2(),
                   _showAddress3(),
@@ -256,7 +256,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
   }
 
 //----------------------- _showDocument --------------------------
-  Widget _showDocument() {
+  Widget _showAvonCount() {
     return Container(
       padding: const EdgeInsets.all(10),
       child: TextField(
@@ -266,8 +266,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
             fillColor: Colors.white,
             filled: true,
             enabled: false,
-            hintText: 'Ingresa documento...',
-            labelText: 'Documento',
+            hintText: 'Ingresa Cuenta de Avon...',
+            labelText: 'Cuenta de Avon',
             errorText: _documentShowError ? _documentError : null,
             suffixIcon: const Icon(Icons.assignment_ind),
             border:
@@ -542,6 +542,14 @@ class _ClienteScreenState extends State<ClienteScreen> {
       _lastNameShowError = false;
     }
 
+    if (_address1!.isEmpty) {
+      isValid = false;
+      _address1ShowError = true;
+      _address1Error = 'Debes ingresar una dirección';
+    } else {
+      _address1ShowError = false;
+    }
+
     if (_phoneNumber.isEmpty) {
       isValid = false;
       _phoneNumberShowError = true;
@@ -804,7 +812,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
     _lastName = _cliente.lastName;
     _lastNameController.text = _lastName;
 
-    _document = _cliente.document;
+    _document = _cliente.avonAccount;
     _documentController.text = _document;
 
     _address1 = _cliente.address1;

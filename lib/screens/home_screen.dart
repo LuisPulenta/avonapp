@@ -125,15 +125,21 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 30,
             ),
-            Center(
+            const Center(
               child: Text(
-                'Bienvenido/a ${_cliente.fullName}',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                'Bienvenido/a',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(
               height: 10,
+            ),
+            Center(
+              child: Text(
+                _cliente.fullName,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),

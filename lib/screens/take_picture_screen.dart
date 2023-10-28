@@ -38,6 +38,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tomar Foto'),
+        centerTitle: true,
       ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,

@@ -18,6 +18,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vista previa de la foto'),
+        centerTitle: true,
       ),
       body: Column(
         children: [

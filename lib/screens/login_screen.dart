@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:avon_app/models/cliente.dart';
+import 'package:avon_app/screens/pdf_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
 import 'package:avon_app/helpers/constants.dart';
 import 'package:avon_app/components/loader_component.dart';
 import 'package:avon_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,6 +39,19 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _passwordShow = false;
 
   bool _showLoader = false;
+
+  String assetPDFPath = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getFileFromAsset("assets/instructivo.pdf").then((f) {
+      setState(() {
+        assetPDFPath = f.path;
+        print(assetPDFPath);
+      });
+    });
+  }
 
 //----------------------- Pantalla --------------------------
   @override
@@ -97,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 10,
                         ),
+                        _showInstructivo(),
                         _showRememberme(),
                         _showButtons(),
                       ],
@@ -347,11 +366,100 @@ class _LoginScreenState extends State<LoginScreen> {
       _storeUser(body2);
     }
 
+    if (DateTime.parse(cliente.fechaFin).isBefore(DateTime.now())) {
+      await showAlertDialog(
+          context: context,
+          title: 'Mensaje',
+          message: "Su Cuenta ha vencido.",
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => HomeScreen(
                   cliente: cliente,
                 )));
+  }
+
+  Widget _showInstructivo() {
+    return InkWell(
+      onTap: () => _goInstructivo(),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        child: const Text(
+          'Ver Instructivo',
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+    );
+  }
+
+  void _goInstructivo() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PdfViewPage(
+                  path: assetPDFPath,
+                )));
+  }
+
+  Future<File> getFileFromAsset(String asset) async {
+    try {
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/mi_archivo.pdf");
+      File assetFile = await file.writeAsBytes(bytes);
+      return assetFile;
+    } catch (e) {
+      throw Exception("Error al abrir el archivo");
+    }
+  }
+}
+
+class PdfViewPage extends StatefulWidget {
+  final String path;
+
+  const PdfViewPage({required this.path});
+  @override
+  _PdfViewPageState createState() => _PdfViewPageState();
+}
+
+class _PdfViewPageState extends State<PdfViewPage> {
+  bool _estaListoPDF = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Instructivo"),
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: <Widget>[
+          PDFView(
+            filePath: widget.path,
+            swipeHorizontal: true,
+            onError: (e) {},
+            onRender: (_pages) {
+              setState(() {
+                _estaListoPDF = true;
+              });
+            },
+            onViewCreated: (PDFViewController vc) {},
+            onPageError: (page, e) {},
+          ),
+          !_estaListoPDF
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : const Offstage()
+        ],
+      ),
+    );
   }
 }

@@ -41,6 +41,10 @@ class Cliente {
   String fullName = '';
   String id = '';
   String phoneNumber = '';
+  String fechaAlta = '';
+  String fechaFin = '';
+  int catastroFinalizado = 0;
+  int? avonZoneNumber = 0;
 
   Cliente({
     required this.modulo,
@@ -85,6 +89,10 @@ class Cliente {
     required this.fullName,
     required this.id,
     required this.phoneNumber,
+    required this.fechaAlta,
+    required this.fechaFin,
+    required this.catastroFinalizado,
+    required this.avonZoneNumber,
   });
 
   Cliente.fromJson(Map<String, dynamic> json) {
@@ -136,6 +144,10 @@ class Cliente {
     fullName = json['fullName'] ?? '';
     id = json['id'].toString();
     phoneNumber = json['phoneNumber'] ?? '';
+    fechaAlta = json['fechaAlta'] ?? '';
+    fechaFin = json['fechaFin'] ?? '';
+    catastroFinalizado = json['catastroFinalizado'] ?? '';
+    avonZoneNumber = json['avonZoneNumber'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -188,6 +200,11 @@ class Cliente {
     data['fullName'] = fullName;
     data['id'] = id;
     data['phoneNumber'] = phoneNumber;
+
+    data['fechaAlta'] = fechaAlta;
+    data['fechaFin'] = fechaFin;
+    data['catastroFinalizado'] = catastroFinalizado;
+    data['avonZoneNumber'] = avonZoneNumber;
     return data;
   }
 }
