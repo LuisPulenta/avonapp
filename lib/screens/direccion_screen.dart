@@ -254,6 +254,19 @@ class _DireccionScreenState extends State<DireccionScreen> {
       return;
     }
 
+    var response = await showAlertDialog(
+        context: context,
+        title: 'Aviso',
+        message:
+            '¿Está seguro de seleccionar la dirección ${_direccionController.text}?',
+        actions: <AlertDialogAction>[
+          const AlertDialogAction(key: 'si', label: 'SI'),
+          const AlertDialogAction(key: 'no', label: 'NO'),
+        ]);
+    if (response == 'no') {
+      return;
+    }
+
     setState(() {
       _showLoader = true;
     });

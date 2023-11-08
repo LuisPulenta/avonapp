@@ -202,8 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   cliente: _cliente,
                   myProfile: true,
                 )));
-    if (result == 'yes') {
-      _getUser();
-    }
+    _getUser();
+    // if (result == 'yes') {
+    //   _getUser();
+    // }
   }
 }
