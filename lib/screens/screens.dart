@@ -1,0 +1,12 @@
+export 'package:avon_app/screens/change_password_screen.dart';
+export 'package:avon_app/screens/cliente_screen.dart';
+export 'package:avon_app/screens/direccion_screen.dart';
+export 'package:avon_app/screens/display_picture_screen.dart';
+export 'package:avon_app/screens/home_screen.dart';
+export 'package:avon_app/screens/login_screen.dart';
+export 'package:avon_app/screens/modulo_screen.dart';
+export 'package:avon_app/screens/pdf_screen.dart';
+export 'package:avon_app/screens/recover_password_screen.dart';
+export 'package:avon_app/screens/register_user_screen.dart';
+export 'package:avon_app/screens/take_picture_screen.dart';
+export 'package:avon_app/screens/wait_screen.dart';

@@ -1,13 +1,11 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:avon_app/models/cliente.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:avon_app/helpers/constants.dart';
+import 'package:avon_app/models/models.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avon_app/helpers/api_helper.dart';
-import 'package:avon_app/models/response.dart';
-import 'package:avon_app/screens/login_screen.dart';
-import 'package:avon_app/screens/cliente_screen.dart';
+import 'package:avon_app/screens/screens.dart';
 
 class HomeScreen extends StatefulWidget {
   final Cliente cliente;
@@ -104,24 +102,35 @@ class _HomeScreenState extends State<HomeScreen> {
               image: AssetImage('assets/logo.png'),
               width: 250,
             ),
-            const SizedBox(
-              height: 40,
-            ),
-            ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: CachedNetworkImage(
-                  imageUrl: _cliente.imageFullPath,
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: 200,
-                  placeholder: (context, url) => const Image(
-                    image: AssetImage('assets/loading.gif'),
-                    fit: BoxFit.cover,
-                    height: 200,
-                    width: 200,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  Constants.version,
+                  style: const TextStyle(
+                    fontSize: 20,
                   ),
-                )),
+                ),
+              ],
+            ),
+            // const SizedBox(
+            //   height: 40,
+            // ),
+            // ClipRRect(
+            //     borderRadius: BorderRadius.circular(100),
+            //     child: CachedNetworkImage(
+            //       imageUrl: _cliente.imageFullPath,
+            //       errorWidget: (context, url, error) => const Icon(Icons.error),
+            //       fit: BoxFit.cover,
+            //       height: 200,
+            //       width: 200,
+            //       placeholder: (context, url) => const Image(
+            //         image: AssetImage('assets/loading.gif'),
+            //         fit: BoxFit.cover,
+            //         height: 200,
+            //         width: 200,
+            //       ),
+            //     )),
             const SizedBox(
               height: 30,
             ),
@@ -136,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Center(
               child: Text(
-                _cliente.fullName,
+                _cliente.firstName,
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -153,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setBool('isRemembered', false);
     await prefs.setString('userBody', '');
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
 //----------------- _getUser --------------------

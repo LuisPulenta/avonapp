@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:avon_app/models/cliente.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -12,10 +11,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:avon_app/components/loader_component.dart';
 import 'package:avon_app/helpers/api_helper.dart';
-import 'package:avon_app/models/response.dart';
-import 'package:avon_app/screens/change_password_screen.dart';
-import 'package:avon_app/screens/direccion_screen.dart';
-import 'package:avon_app/screens/take_picture_screen.dart';
+import 'package:avon_app/models/models.dart';
+import 'package:avon_app/screens/screens.dart';
+
 
 class ClienteScreen extends StatefulWidget {
   final Cliente cliente;
@@ -37,6 +35,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
   int _option = 0;
   late XFile _image;
   late Cliente _cliente;
+
+  int _pantalla = 0;
 
   String _firstName = '';
   String _firstNameError = '';
@@ -103,7 +103,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
         backgroundColor: const Color(0xFFFFFFCC),
         appBar: AppBar(
           title:
-              Text(_cliente.id.isEmpty ? 'Nuevo Usuario' : _cliente.fullName),
+              Text(_cliente.id.isEmpty ? 'Nuevo Usuario' : _cliente.firstName),
         ),
         body: Stack(
           children: [
@@ -113,15 +113,18 @@ class _ClienteScreenState extends State<ClienteScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  _showPhoto(),
+                  //_showPhoto(),
                   _showFirstName(),
-                  _showLastName(),
+                  //_showLastName(),
                   _showAvonCount(),
                   _showAddress1(),
                   //_showAddress2(),
                   //_showAddress3(),
                   //_showEmail(),
                   _showPhoneNumber(),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   _showButtons(),
                   const SizedBox(
                     height: 10,
@@ -220,8 +223,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
         decoration: InputDecoration(
             fillColor: Colors.white,
             filled: true,
-            hintText: 'Ingresa nombres...',
-            labelText: 'Nombres',
+            enabled: false,
+            hintText: 'Ingresa Nombre y Apellido...',
+            labelText: 'Nombre y Apellido',
             errorText: _firstNameShowError ? _firstNameError : null,
             suffixIcon: const Icon(Icons.person),
             border:
@@ -301,6 +305,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                       borderRadius: BorderRadius.circular(10))),
               onChanged: (value) {
                 _address1 = value;
+                _cliente.address1 = _address1 != null ? _address1! : '';
               },
             ),
           ),
@@ -308,10 +313,12 @@ class _ClienteScreenState extends State<ClienteScreen> {
             width: 10,
           ),
           IconButton(
-              onPressed: () {
-                _option = 1;
-                _address();
-              },
+              onPressed: !_showLoader
+                  ? () {
+                      _option = 1;
+                      _address();
+                    }
+                  : null,
               color: Colors.red,
               icon: const Icon(Icons.location_on, size: 40)),
           const SizedBox(
@@ -455,61 +462,64 @@ class _ClienteScreenState extends State<ClienteScreen> {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              onPressed: () => _save(),
+              onPressed: () {
+                _pantalla = 1;
+                _save();
+              },
             ),
           ),
-          _cliente.id.isEmpty
-              ? Container()
-              : const SizedBox(
-                  width: 20,
-                ),
-          _cliente.id.isEmpty
-              ? Container()
-              : widget.myProfile
-                  ? Expanded(
-                      child: ElevatedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.lock),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text('Contraseña'),
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFB4161B),
-                          minimumSize: const Size(100, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onPressed: () => _changePassword(),
-                      ),
-                    )
-                  : Expanded(
-                      child: ElevatedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.delete),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text('Borrar'),
-                          ],
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                            return const Color(0xFFB4161B);
-                          }),
-                        ),
-                        onPressed: () => _confirmDelete(),
-                      ),
-                    ),
+          // _cliente.id.isEmpty
+          //     ? Container()
+          //     : const SizedBox(
+          //         width: 20,
+          //       ),
+          // _cliente.id.isEmpty
+          //     ? Container()
+          //     : widget.myProfile
+          //         ? Expanded(
+          //             child: ElevatedButton(
+          //               child: Row(
+          //                 mainAxisAlignment: MainAxisAlignment.center,
+          //                 children: const [
+          //                   Icon(Icons.lock),
+          //                   SizedBox(
+          //                     width: 15,
+          //                   ),
+          //                   Text('Contraseña'),
+          //                 ],
+          //               ),
+          //               style: ElevatedButton.styleFrom(
+          //                 backgroundColor: const Color(0xFFB4161B),
+          //                 minimumSize: const Size(100, 50),
+          //                 shape: RoundedRectangleBorder(
+          //                   borderRadius: BorderRadius.circular(5),
+          //                 ),
+          //               ),
+          //               onPressed: () => _changePassword(),
+          //             ),
+          //           )
+          //         : Expanded(
+          //             child: ElevatedButton(
+          //               child: Row(
+          //                 mainAxisAlignment: MainAxisAlignment.center,
+          //                 children: const [
+          //                   Icon(Icons.delete),
+          //                   SizedBox(
+          //                     width: 15,
+          //                   ),
+          //                   Text('Borrar'),
+          //                 ],
+          //               ),
+          //               style: ButtonStyle(
+          //                 backgroundColor:
+          //                     MaterialStateProperty.resolveWith<Color>(
+          //                         (Set<MaterialState> states) {
+          //                   return const Color(0xFFB4161B);
+          //                 }),
+          //               ),
+          //               onPressed: () => _confirmDelete(),
+          //             ),
+          //           ),
         ],
       ),
     );
@@ -535,13 +545,13 @@ class _ClienteScreenState extends State<ClienteScreen> {
       _firstNameShowError = false;
     }
 
-    if (_lastName.isEmpty) {
-      isValid = false;
-      _lastNameShowError = true;
-      _lastNameError = 'Debes ingresar un apellido';
-    } else {
-      _lastNameShowError = false;
-    }
+    // if (_lastName.isEmpty) {
+    //   isValid = false;
+    //   _lastNameShowError = true;
+    //   _lastNameError = 'Debes ingresar un apellido';
+    // } else {
+    //   _lastNameShowError = false;
+    // }
 
     if (_address1!.isEmpty) {
       isValid = false;
@@ -555,8 +565,22 @@ class _ClienteScreenState extends State<ClienteScreen> {
       isValid = false;
       _phoneNumberShowError = true;
       _phoneNumberError = 'Debes ingresar un teléfono';
-    } else {
-      _phoneNumberShowError = false;
+    }
+
+    if (_phoneNumber.isNotEmpty && int.tryParse(_phoneNumber) == null) {
+      isValid = false;
+      _phoneNumberShowError = true;
+      _phoneNumberError = 'El teléfono debe contener sólo números';
+    }
+
+    if (!((_phoneNumber.isEmpty) || (int.tryParse(_phoneNumber) == null))) {
+      {
+        _phoneNumberShowError = false;
+      }
+
+      setState(() {});
+
+      return isValid;
     }
 
     setState(() {});
@@ -625,7 +649,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
       'modulo': _cliente.modulo,
       'avonAccount': _cliente.avonAccount,
       'firstName': _firstName,
-      'lastName': _lastName,
+      'lastName': _firstName,
       'document': _document,
       'address1': _cliente.address1,
       'latitude1': _cliente.latitude1,
@@ -696,7 +720,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
           ]);
       return;
     }
-    Navigator.pop(context, 'yes');
+    if (_pantalla == 1) {
+      Navigator.pop(context);
+    }
   }
 
 //----------------------- _confirmDelete --------------------------
@@ -839,9 +865,16 @@ class _ClienteScreenState extends State<ClienteScreen> {
 
 //----------------------- _address --------------------------
   void _address() async {
+    setState(() {
+      _showLoader = true;
+    });
+
     await _getPosition();
 
     if (_habilitaPosicion) {
+      setState(() {
+        _showLoader = false;
+      });
       Cliente? userModified = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -890,6 +923,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
           _address2Controller.text = _address2!;
           _address3Controller.text = _address3!;
         });
+        _pantalla = 2;
+        _save();
       }
     }
   }

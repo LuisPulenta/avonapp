@@ -25,6 +25,7 @@ class DireccionScreen extends StatefulWidget {
 }
 
 class _DireccionScreenState extends State<DireccionScreen> {
+//----------------------- Variables --------------------------
   final String _direccionError = '';
   final bool _direccionShowError = false;
   final TextEditingController _direccionController = TextEditingController();
@@ -59,6 +60,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
 
   LatLng _center = const LatLng(0, 0);
 
+//----------------------- initState --------------------------
   @override
   void initState() {
     super.initState();
@@ -71,6 +73,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
         LatLng(widget.positionUser.latitude, widget.positionUser.longitude);
   }
 
+//----------------------- Pantalla --------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,23 +111,23 @@ class _DireccionScreenState extends State<DireccionScreen> {
                       size: 50,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: TextField(
-                      controller: _direccionController,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          hintText: 'Dirección...',
-                          labelText: 'Dirección',
-                          errorText:
-                              _direccionShowError ? _direccionError : null,
-                          prefixIcon: const Icon(Icons.home),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      onChanged: (value) {},
-                    ),
-                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.all(10),
+                  //   child: TextField(
+                  //     controller: _direccionController,
+                  //     decoration: InputDecoration(
+                  //         fillColor: Colors.white,
+                  //         filled: true,
+                  //         hintText: 'Dirección...',
+                  //         labelText: 'Dirección',
+                  //         errorText:
+                  //             _direccionShowError ? _direccionError : null,
+                  //         prefixIcon: const Icon(Icons.home),
+                  //         border: OutlineInputBorder(
+                  //             borderRadius: BorderRadius.circular(10))),
+                  //     onChanged: (value) {},
+                  //   ),
+                  // ),
                 ])
               : Container(),
           _showLoader
@@ -157,35 +160,37 @@ class _DireccionScreenState extends State<DireccionScreen> {
               ),
               onPressed: () => _marcar(),
             ),
-            ElevatedButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.save),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text('Seleccionar'),
-                ],
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-                  return const Color(0xFFe4540c);
-                }),
-              ),
-              onPressed: () => _guardar(),
-            ),
+            // ElevatedButton(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: const [
+            //       Icon(Icons.save),
+            //       SizedBox(
+            //         width: 20,
+            //       ),
+            //       Text('Seleccionar'),
+            //     ],
+            //   ),
+            //   style: ButtonStyle(
+            //     backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            //         (Set<MaterialState> states) {
+            //       return const Color(0xFFe4540c);
+            //     }),
+            //   ),
+            //   onPressed: () => _guardar(),
+            // ),
           ],
         ),
       ],
     );
   }
 
+//----------------------- _onCameraMove --------------------------
   void _onCameraMove(CameraPosition position) {
     _center = position.target;
   }
 
+//----------------------- _marcar --------------------------
   void _marcar() async {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(_center.latitude, _center.longitude);
@@ -216,11 +221,14 @@ class _DireccionScreenState extends State<DireccionScreen> {
       icon: BitmapDescriptor.defaultMarker,
     ));
 
-    setState(() {
-      _showSnackbar();
-    });
+    // setState(() {
+    //   _showSnackbar();
+    // });
+
+    _guardar();
   }
 
+//----------------------- _changeMapType --------------------------
   void _changeMapType() {
     _defaultMapType = _defaultMapType == MapType.normal
         ? MapType.satellite
@@ -230,6 +238,7 @@ class _DireccionScreenState extends State<DireccionScreen> {
     setState(() {});
   }
 
+//----------------------- _guardar --------------------------
   _guardar() async {
     if (_markers.isEmpty) {
       await showAlertDialog(
@@ -256,12 +265,11 @@ class _DireccionScreenState extends State<DireccionScreen> {
 
     var response = await showAlertDialog(
         context: context,
-        title: 'Aviso',
-        message:
-            '¿Está seguro de seleccionar la dirección ${_direccionController.text}?',
+        title: 'Por favor confirma tu dirección',
+        message: '${_direccionController.text}',
         actions: <AlertDialogAction>[
-          const AlertDialogAction(key: 'si', label: 'SI'),
-          const AlertDialogAction(key: 'no', label: 'NO'),
+          const AlertDialogAction(key: 'si', label: 'Ok'),
+          const AlertDialogAction(key: 'no', label: 'Cancelar'),
         ]);
     if (response == 'no') {
       return;
@@ -343,47 +351,16 @@ class _DireccionScreenState extends State<DireccionScreen> {
         : widget.cliente.subAdministrativeArea3;
     userModified.subLocality3 =
         widget.option == 3 ? subLocality : widget.cliente.subLocality3;
-
-    // var connectivityResult = await Connectivity().checkConnectivity();
-
-    // if (connectivityResult == ConnectivityResult.none) {
-    //   setState(() {
-    //     _showLoader = false;
-    //   });
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message: 'Verifica que estés conectado a Internet',
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   return;
-    // }
-
-    // Response response = await ApiHelper.put(
-    //     '/api/Users/', widget.cliente.id, request, widget.token);
-
-    // setState(() {
-    //   _showLoader = false;
-    // });
-
-    // if (!response.isSuccess) {
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message: response.message,
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   return;
-    // }
-    //Navigator.pop(context, 'yes');
     Navigator.pop(context, userModified);
   }
 
 //*****************************************************************************
 //************************** METODO SHOWSNACKBAR ******************************
 //*****************************************************************************
+
+//-----------------------------------------------------------
+//----------------------- _guardar --------------------------
+//-----------------------------------------------------------
 
   void _showSnackbar() {
     SnackBar snackbar = const SnackBar(

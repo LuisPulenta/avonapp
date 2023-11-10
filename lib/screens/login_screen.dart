@@ -1,28 +1,32 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:avon_app/models/cliente.dart';
-import 'package:avon_app/screens/pdf_screen.dart';
+import 'package:avon_app/components/loader_component.dart';
+import 'package:avon_app/helpers/api_helper.dart';
+import 'package:avon_app/helpers/constants.dart';
+import 'package:avon_app/models/models.dart';
+import 'package:avon_app/screens/screens.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:http/http.dart' as http;
-import 'package:avon_app/helpers/constants.dart';
-import 'package:avon_app/components/loader_component.dart';
-import 'package:avon_app/screens/home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-//----------------------- Variables --------------------------
 class _LoginScreenState extends State<LoginScreen> {
+//------------------------------------------------------------------
+//------------------------- Variables ------------------------------
+//------------------------------------------------------------------
   String _email = '';
   String _password = '';
   // String _email = '12345678';
@@ -42,6 +46,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String assetPDFPath = "";
 
+  Modulo _modulo = Modulo(
+      idModulo: 0,
+      nombre: '',
+      nroVersion: '',
+      link: '',
+      fechaRelease: '',
+      actualizOblig: 0);
+
+//------------------------------------------------------------------
+//------------------------- initState ------------------------------
+//------------------------------------------------------------------
+
   @override
   void initState() {
     super.initState();
@@ -51,9 +67,13 @@ class _LoginScreenState extends State<LoginScreen> {
         print(assetPDFPath);
       });
     });
+    _getModulo();
   }
 
-//----------------------- Pantalla --------------------------
+//------------------------------------------------------------------
+//------------------------- Pantalla -------------------------------
+//------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,6 +138,53 @@ class _LoginScreenState extends State<LoginScreen> {
                         _showInstructivo(),
                         _showRememberme(),
                         _showButtons(),
+
+                        //------------------------------------------------------------
+                        //------------------------------------------------------------
+                        //------------------------------------------------------------
+
+                        _modulo.nroVersion != '' &&
+                                _modulo.nroVersion != Constants.version
+                            ? const SizedBox(
+                                height: 20,
+                              )
+                            : Container(),
+                        _modulo.nroVersion != '' &&
+                                _modulo.nroVersion != Constants.version
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextButton(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Text('Nueva versión disponible',
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 18,
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        minimumSize:
+                                            const Size(double.infinity, 50),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                      onPressed: () => _launchURL2(),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
@@ -199,6 +266,30 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//---------------------------- _showInstructivo ---------------------------
+  Widget _showInstructivo() {
+    return InkWell(
+      onTap: () => _goInstructivo(),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        child: const Text(
+          'Ver Instructivo',
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+    );
+  }
+
+//---------------------------- _goInstructivo ---------------------------
+  void _goInstructivo() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PdfViewPage(
+                  path: assetPDFPath,
+                )));
+  }
+
 //----------------------- _showRememberme --------------------------
   _showRememberme() {
     return CheckboxListTile(
@@ -249,43 +340,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//----------------------- _storeUser --------------------------
-  void _storeUser(String body) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isRemembered', true);
-    await prefs.setString('userBody', body);
-    await prefs.setString('date', DateTime.now().toString());
-  }
-
-//----------------------- validateFields --------------------------
-  bool validateFields() {
-    bool isValid = true;
-
-    if (_email.isEmpty) {
-      isValid = false;
-      _emailShowError = true;
-      _emailError = 'Debes ingresar tu Cuenta';
-    } else {
-      _emailShowError = false;
-    }
-
-    if (_password.isEmpty) {
-      isValid = false;
-      _passwordShowError = true;
-      _passwordError = 'Debes ingresar tu Contraseña';
-    } else if (_password.length < 6) {
-      isValid = false;
-      _passwordShowError = true;
-      _passwordError = 'La Contraseña debe tener al menos 6 caracteres';
-    } else {
-      _passwordShowError = false;
-    }
-
-    setState(() {});
-
-    return isValid;
-  }
-
 //--------------------- _login -----------------------------
   void _login() async {
     setState(() {
@@ -301,6 +355,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      Response response2 = await ApiHelper.getModulo("4");
+      _modulo = response2.result;
+    }
 
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {
@@ -385,28 +444,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 )));
   }
 
-  Widget _showInstructivo() {
-    return InkWell(
-      onTap: () => _goInstructivo(),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
-        child: const Text(
-          'Ver Instructivo',
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
-    );
+//----------------------- validateFields --------------------------
+  bool validateFields() {
+    bool isValid = true;
+
+    if (_email.isEmpty) {
+      isValid = false;
+      _emailShowError = true;
+      _emailError = 'Debes ingresar tu Cuenta';
+    } else {
+      _emailShowError = false;
+    }
+
+    if (_password.isEmpty) {
+      isValid = false;
+      _passwordShowError = true;
+      _passwordError = 'Debes ingresar tu Contraseña';
+    } else if (_password.length < 6) {
+      isValid = false;
+      _passwordShowError = true;
+      _passwordError = 'La Contraseña debe tener al menos 6 caracteres';
+    } else {
+      _passwordShowError = false;
+    }
+
+    setState(() {});
+
+    return isValid;
   }
 
-  void _goInstructivo() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PdfViewPage(
-                  path: assetPDFPath,
-                )));
+//----------------------- _storeUser --------------------------
+  void _storeUser(String body) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isRemembered', true);
+    await prefs.setString('userBody', body);
+    await prefs.setString('date', DateTime.now().toString());
   }
 
+//---------------------------- getFileFromAsset ---------------------------
   Future<File> getFileFromAsset(String asset) async {
     try {
       var data = await rootBundle.load(asset);
@@ -419,8 +494,33 @@ class _LoginScreenState extends State<LoginScreen> {
       throw Exception("Error al abrir el archivo");
     }
   }
+
+  //---------------------------- _launchURL2 ------------------------------
+  void _launchURL2() async {
+    if (!await launch(
+        'https://play.google.com/store/apps/details?id=com.luisnu.avon_app2&pli=1')) {
+      throw 'No se puede conectar a la tienda';
+    }
+  }
+
+//----------------------------------------------------------
+//--------------------- _getModulo -------------------------
+//----------------------------------------------------------
+
+  Future<void> _getModulo() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult != ConnectivityResult.none) {
+      Response response2 = await ApiHelper.getModulo("4");
+      _modulo = response2.result;
+      var a = 1;
+      setState(() {});
+    }
+  }
 }
 
+//-----------------------------------------------------------------------
+//---------------------------- PdfViewPage ------------------------------
+//-----------------------------------------------------------------------
 class PdfViewPage extends StatefulWidget {
   final String path;
 
@@ -429,6 +529,9 @@ class PdfViewPage extends StatefulWidget {
   _PdfViewPageState createState() => _PdfViewPageState();
 }
 
+//-----------------------------------------------------------------------
+//---------------------------- _PdfViewPageState ------------------------
+//-----------------------------------------------------------------------
 class _PdfViewPageState extends State<PdfViewPage> {
   bool _estaListoPDF = false;
 
