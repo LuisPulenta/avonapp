@@ -14,7 +14,6 @@ import 'package:avon_app/helpers/api_helper.dart';
 import 'package:avon_app/models/models.dart';
 import 'package:avon_app/screens/screens.dart';
 
-
 class ClienteScreen extends StatefulWidget {
   final Cliente cliente;
   final bool myProfile;
@@ -119,7 +118,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                   _showAvonCount(),
                   _showAddress1(),
                   //_showAddress2(),
-                  //_showAddress3(),
+                  _showAddress3(),
                   //_showEmail(),
                   _showPhoneNumber(),
                   const SizedBox(
@@ -372,43 +371,26 @@ class _ClienteScreenState extends State<ClienteScreen> {
   }
 
 //----------------------- _showAddress3 --------------------------
+
   Widget _showAddress3() {
     return Container(
       padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _address3Controller,
-              keyboardType: TextInputType.streetAddress,
-              decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'Ingresa dirección...',
-                  labelText: 'Dirección 3',
-                  errorText: _address3ShowError ? _address3Error : null,
-                  suffixIcon: const Icon(Icons.home),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
-              onChanged: (value) {
-                _address3 = value;
-              },
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          IconButton(
-              onPressed: () {
-                _option = 3;
-                _address();
-              },
-              color: Colors.red,
-              icon: const Icon(Icons.location_on, size: 40)),
-          const SizedBox(
-            width: 10,
-          ),
-        ],
+      child: TextField(
+        controller: _address3Controller,
+        maxLines: 3,
+        decoration: InputDecoration(
+            fillColor: Colors.white,
+            filled: true,
+            hintText:
+                'Ingresa indicaciones adicionales que puedan servir para ubicar tu domicilio...',
+            labelText: 'Referencia del domicilio (opcional)',
+            errorText: _address3ShowError ? _address3Error : null,
+            suffixIcon: const Icon(Icons.list),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+        onChanged: (value) {
+          _address3 = value;
+        },
       ),
     );
   }
@@ -657,7 +639,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
       'address2': _cliente.address2,
       'latitude2': _cliente.latitude2,
       'longitude2': _cliente.longitude2,
-      'address3': _cliente.address3,
+      'address3': _address3,
       'latitude3': _cliente.latitude3,
       'longitude3': _cliente.longitude3,
       'email': _email,
@@ -721,7 +703,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
       return;
     }
     if (_pantalla == 1) {
-      Navigator.pop(context);
+      //Navigator.pop(context);
+      _showSnackbar();
     }
   }
 
@@ -1028,5 +1011,15 @@ class _ClienteScreenState extends State<ClienteScreen> {
     _direccion = placemarks[0].street.toString() +
         " - " +
         placemarks[0].locality.toString();
+  }
+
+  void _showSnackbar() {
+    SnackBar snackbar = const SnackBar(
+      content: Text("Dirección guardad con éxito. Muchas gracias!!!"),
+      backgroundColor: Color.fromARGB(255, 84, 228, 12),
+      duration: Duration(seconds: 5),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    //ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }

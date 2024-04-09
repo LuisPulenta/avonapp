@@ -131,12 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         _showEmail(),
-                        _showPassword(),
+                        //_showPassword(),
                         const SizedBox(
                           height: 10,
                         ),
                         _showInstructivo(),
-                        _showRememberme(),
+                        //_showRememberme(),
                         _showButtons(),
 
                         //------------------------------------------------------------
@@ -319,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     width: 20,
                   ),
-                  Text('Login'),
+                  Text('Acceder'),
                 ],
               ),
               style: ElevatedButton.styleFrom(
@@ -391,9 +391,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (response2.statusCode >= 400) {
       setState(() {
-        _passwordShowError = true;
-        _passwordError = 'Cuenta o contraseña incorrectos';
+        _emailShowError = true;
+        _emailError = 'Cuenta inexistente';
+        _showLoader = false;
       });
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Cuenta inexistente',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
     }
 
     setState(() {
@@ -404,43 +413,59 @@ class _LoginScreenState extends State<LoginScreen> {
     var decodedJson2 = jsonDecode(body2);
     var cliente = Cliente.fromJson(decodedJson2);
 
-    if (cliente.password.toLowerCase() != _password.toLowerCase()) {
-      setState(() {
-        _passwordShowError = true;
-        _passwordError = 'Contraseña incorrecta';
-      });
-
-      setState(() {
-        _showLoader = false;
-      });
+    if (cliente.address1 != "") {
+      _emailShowError = true;
+      _emailError = 'Esta cuenta ya tiene dirección cargada';
+      _showLoader = false;
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Esta cuenta ya tiene dirección cargada',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
 
       return;
     }
+
+    // if (cliente.password.toLowerCase() != _password.toLowerCase()) {
+    //   setState(() {
+    //     _passwordShowError = true;
+    //     _passwordError = 'Contraseña incorrecta';
+    //   });
+
+    //   setState(() {
+    //     _showLoader = false;
+    //   });
+
+    //   return;
+    // }
 
     setState(() {
       _showLoader = false;
     });
 
-    if (_rememberme) {
-      _storeUser(body2);
-    }
+    // if (_rememberme) {
+    //   _storeUser(body2);
+    // }
 
-    if (DateTime.parse(cliente.fechaFin).isBefore(DateTime.now())) {
-      await showAlertDialog(
-          context: context,
-          title: 'Mensaje',
-          message: "Su Cuenta ha vencido.",
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
+    // if (DateTime.parse(cliente.fechaFin).isBefore(DateTime.now())) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Mensaje',
+    //       message: "Su Cuenta ha vencido.",
+    //       actions: <AlertDialogAction>[
+    //         const AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   return;
+    // }
 
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => HomeScreen(
+            builder: (context) => ClienteScreen(
                   cliente: cliente,
+                  myProfile: true,
                 )));
   }
 
@@ -452,21 +477,28 @@ class _LoginScreenState extends State<LoginScreen> {
       isValid = false;
       _emailShowError = true;
       _emailError = 'Debes ingresar tu Cuenta';
+      showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Debes ingresar tu Cuenta',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
     } else {
       _emailShowError = false;
     }
 
-    if (_password.isEmpty) {
-      isValid = false;
-      _passwordShowError = true;
-      _passwordError = 'Debes ingresar tu Contraseña';
-    } else if (_password.length < 6) {
-      isValid = false;
-      _passwordShowError = true;
-      _passwordError = 'La Contraseña debe tener al menos 6 caracteres';
-    } else {
-      _passwordShowError = false;
-    }
+    // if (_password.isEmpty) {
+    //   isValid = false;
+    //   _passwordShowError = true;
+    //   _passwordError = 'Debes ingresar tu Contraseña';
+    // } else if (_password.length < 6) {
+    //   isValid = false;
+    //   _passwordShowError = true;
+    //   _passwordError = 'La Contraseña debe tener al menos 6 caracteres';
+    // } else {
+    //   _passwordShowError = false;
+    // }
 
     setState(() {});
 
