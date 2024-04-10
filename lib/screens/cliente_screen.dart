@@ -704,7 +704,17 @@ class _ClienteScreenState extends State<ClienteScreen> {
     }
     if (_pantalla == 1) {
       //Navigator.pop(context);
-      _showSnackbar();
+      //_showSnackbar();
+
+      await showAlertDialog(
+          context: context,
+          title: 'Ok!!',
+          message: 'Dirección guardada con éxito. Muchas gracias!!!',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+
+      exit(0);
     }
   }
 
@@ -1015,9 +1025,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
 
   void _showSnackbar() {
     SnackBar snackbar = const SnackBar(
-      content: Text("Dirección guardad con éxito. Muchas gracias!!!"),
+      content: Text("Dirección guardada con éxito. Muchas gracias!!!"),
       backgroundColor: Color.fromARGB(255, 84, 228, 12),
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 15),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
     //ScaffoldMessenger.of(context).hideCurrentSnackBar();
