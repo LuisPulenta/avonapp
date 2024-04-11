@@ -113,14 +113,29 @@ class _ClienteScreenState extends State<ClienteScreen> {
                     height: 20,
                   ),
                   //_showPhoto(),
-                  _showFirstName(),
+                  //_showFirstName(),
                   //_showLastName(),
                   _showAvonCount(),
+                  const Divider(height: 16, color: Colors.black),
+                  const Text(
+                      'Toque el ICONO ROJO para cargar la Geolocalización'),
                   _showAddress1(),
+                  _address1 != null
+                      ? Text(
+                          'Puede corregir el domicilio generado desde el Mapa')
+                      : Container(),
                   //_showAddress2(),
+                  const Divider(height: 16, color: Colors.black),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: const Text(
+                        'Referencias adicionales que puedan servir para la localización (Ejemplo: Casa con rejas verdes)'),
+                  ),
                   _showAddress3(),
                   //_showEmail(),
+                  const Divider(height: 16, color: Colors.black),
                   _showPhoneNumber(),
+                  const Divider(height: 16, color: Colors.black),
                   const SizedBox(
                     height: 20,
                   ),
@@ -543,11 +558,27 @@ class _ClienteScreenState extends State<ClienteScreen> {
       _address1ShowError = false;
     }
 
-    if (_phoneNumber.isEmpty) {
+    if (_cliente.latitude1 == 0 || _cliente.longitude1 == 0) {
       isValid = false;
-      _phoneNumberShowError = true;
-      _phoneNumberError = 'Debes ingresar un teléfono';
+      _address1ShowError = true;
+      _address1Error = 'Debes ingresar una dirección geolocalizada';
+      showAlertDialog(
+          context: context,
+          title: 'Atención',
+          message:
+              'Primero debe ingresar una dirección geolocalizada, y luego corrige si desea',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+    } else {
+      _address1ShowError = false;
     }
+
+    // if (_phoneNumber.isEmpty) {
+    //   isValid = false;
+    //   _phoneNumberShowError = true;
+    //   _phoneNumberError = 'Debes ingresar un teléfono';
+    // }
 
     if (_phoneNumber.isNotEmpty && int.tryParse(_phoneNumber) == null) {
       isValid = false;
@@ -555,15 +586,15 @@ class _ClienteScreenState extends State<ClienteScreen> {
       _phoneNumberError = 'El teléfono debe contener sólo números';
     }
 
-    if (!((_phoneNumber.isEmpty) || (int.tryParse(_phoneNumber) == null))) {
-      {
-        _phoneNumberShowError = false;
-      }
+    // if (!((_phoneNumber.isEmpty) || (int.tryParse(_phoneNumber) == null))) {
+    //   {
+    //     _phoneNumberShowError = false;
+    //   }
 
-      setState(() {});
+    //   setState(() {});
 
-      return isValid;
-    }
+    //   return isValid;
+    // }
 
     setState(() {});
 
@@ -644,7 +675,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
       'longitude3': _cliente.longitude3,
       'email': _email,
       'userName': _email,
-      'phoneNumber': _phoneNumber,
+      'phoneNumber': _phoneNumber == "" ? "1" : _phoneNumber,
       'image': base64image,
       'street1': _cliente.street1,
       'administrativeArea1': _cliente.administrativeArea1,
@@ -714,7 +745,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
             const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
 
-      exit(0);
+      //exit(0);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     }
   }
 
