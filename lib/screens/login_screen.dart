@@ -419,8 +419,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _showLoader = false;
       await showAlertDialog(
           context: context,
-          title: 'Error',
-          message: 'Esta cuenta ya tiene dirección cargada',
+          title: 'Atención!',
+          message: 'Esta cuenta ya tiene georeferencia cargada. Gracias!',
           actions: <AlertDialogAction>[
             const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);

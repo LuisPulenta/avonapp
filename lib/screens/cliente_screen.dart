@@ -120,16 +120,17 @@ class _ClienteScreenState extends State<ClienteScreen> {
                   const Text(
                       'Toque el ICONO ROJO para cargar la Geolocalización'),
                   _showAddress1(),
-                  _address1 != null
-                      ? Text(
-                          'Puede corregir el domicilio generado desde el Mapa')
-                      : Container(),
                   //_showAddress2(),
                   const Divider(height: 16, color: Colors.black),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: const Text(
-                        'Referencias adicionales que puedan servir para la localización (Ejemplo: Casa con rejas verdes)'),
+
+                  _address1 != null
+                      ? const Text('Repita su domicilio abajo.')
+                      : Container(),
+
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                        'Domicilio/Referencias adicionales que puedan servir para la localización (Ejemplo: Casa con rejas verdes)'),
                   ),
                   _showAddress3(),
                   //_showEmail(),
@@ -303,26 +304,31 @@ class _ClienteScreenState extends State<ClienteScreen> {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          Expanded(
-            child: TextField(
-              controller: _address1Controller,
-              keyboardType: TextInputType.streetAddress,
-              decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'Ingresa dirección...',
-                  //labelText: 'Dirección 1',
-                  labelText: 'Dirección',
-                  errorText: _address1ShowError ? _address1Error : null,
-                  suffixIcon: const Icon(Icons.home),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
-              onChanged: (value) {
-                _address1 = value;
-                _cliente.address1 = _address1 != null ? _address1! : '';
-              },
-            ),
-          ),
+          _address1 != ""
+              ? Expanded(
+                  child: TextField(
+                    controller: _address1Controller,
+                    enabled: false,
+                    keyboardType: TextInputType.streetAddress,
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: 'Ingresa dirección...',
+                        //labelText: 'Dirección 1',
+                        labelText: 'Dirección',
+                        errorText: _address1ShowError ? _address1Error : null,
+                        suffixIcon: const Icon(Icons.home),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    onChanged: (value) {
+                      _address1 = value;
+                      _cliente.address1 = _address1 != null ? _address1! : '';
+                    },
+                  ),
+                )
+              : Container(
+                  width: MediaQuery.of(context).size.width * 0.35,
+                ),
           const SizedBox(
             width: 10,
           ),

@@ -135,6 +135,14 @@ class _DireccionScreenState extends State<DireccionScreen> {
                   text: 'Por favor espere...',
                 )
               : Container(),
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const Text(
+                  "Mueva el Mapa para ubicar su Domicilio. Se recomienda estar en el Domicilio para una mejor Georeferenciación"),
+            ),
+          ),
         ],
       ),
       persistentFooterButtons: [
@@ -265,7 +273,8 @@ class _DireccionScreenState extends State<DireccionScreen> {
 
     var response = await showAlertDialog(
         context: context,
-        title: 'Por favor confirma tu dirección',
+        title:
+            'Esta APP es de 1 solo uso. Por favor confirma ud. la dirección?',
         message: '${_direccionController.text}',
         actions: <AlertDialogAction>[
           const AlertDialogAction(key: 'si', label: 'Ok'),
